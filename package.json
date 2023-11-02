@@ -1,9 +1,9 @@
 {
   "name": "com.rustamkhonoff.planbarchitecture",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Plan B Architecture",
-  "description": "This is an example package",
-  "unity": "2019.1",
+  "description": "Service and System based architecture",
+  "unity": "2021.0",
   "unityRelease": "0b5",
   "documentationUrl": "https://example.com/",
   "changelogUrl": "https://example.com/changelog.html",
@@ -11,5 +11,14 @@
   "author": {
     "name": "Shokhrukhkhon Rustamkhonov",
     "email": "rustamkhonoff@gmail.com"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.svermeulen.extenject"
+      ]
+    }
+  ]
 }

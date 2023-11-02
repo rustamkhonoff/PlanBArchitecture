@@ -14,10 +14,11 @@
   },
   "scopedRegistries": [
     {
-      "name": "OpenUPM",
+      "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.svermeulen.extenject"
+        "com.svermeulen.extenject",
+        "com.openupm"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "name": "com.rustamkhonoff.planbarchitecture",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "displayName": "Plan B Architecture",
   "description": "Service and System based architecture",
   "unity": "2021.3",
@@ -11,8 +11,5 @@
   "author": {
     "name": "Shokhrukhkhon Rustamkhonov",
     "email": "rustamkhonoff@gmail.com"
-  },
-  "dependencies": {
-    "com.svermeulen.extenject": "https://github.com/Mathijs-Bakker/Extenject.git?path=UnityProject/Assets/Plugins/Zenject/Source"
   }
 }

@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "displayName": "Plan B Architecture",
   "description": "Service and System based architecture",
-  "unity": "2021.0",
+  "unity": "2021.3",
   "unityRelease": "0b5",
   "documentationUrl": "https://example.com/",
   "changelogUrl": "https://example.com/changelog.html",

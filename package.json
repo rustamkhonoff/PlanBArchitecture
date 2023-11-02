@@ -12,6 +12,15 @@
     "name": "Shokhrukhkhon Rustamkhonov",
     "email": "rustamkhonoff@gmail.com"
   },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.svermeulen.extenject"
+      ]
+    }
+  ],
   "dependencies": {
     "com.svermeulen.extenject": "9.2.0-stcf3"
   }

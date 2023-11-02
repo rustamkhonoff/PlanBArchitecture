@@ -13,15 +13,6 @@
     "email": "rustamkhonoff@gmail.com"
   },
   "dependencies": {
-    "com.svermeulen.extenject": "9.2.0-stcf3"
-  },
-  "scopedRegistries": [
-    {
-      "name": "package.openupm.com",
-      "url": "https://package.openupm.com",
-      "scopes": [
-        "com.svermeulen.extenject"
-      ]
-    }
-  ]
+    "com.svermeulen.extenject": "https://github.com/Mathijs-Bakker/Extenject.git?path=UnityProject/Assets/Plugins/Zenject/Source"
+  }
 }

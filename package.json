@@ -11,5 +11,12 @@
   "author": {
     "name": "Shokhrukhkhon Rustamkhonov",
     "email": "rustamkhonoff@gmail.com"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Sample Name 1",
+      "description": "Description for sample 1",
+      "path": "Other~/Sample Folder 1"
+    }
+  ]
 }

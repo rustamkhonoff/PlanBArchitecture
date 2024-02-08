@@ -10,7 +10,8 @@ namespace Packages.PlanBArchitecture.Runtime.Types.ReferenceValue.Editor
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Rect helpBoxRect = new(0, 0, position.width, 100);
+            const int padding = 5;
+
 
             SerializedProperty useReference = property.FindPropertyRelative("_useReference");
             string propertyName = useReference.boolValue ? "_value1" : "_value2";
@@ -22,12 +23,13 @@ namespace Packages.PlanBArchitecture.Runtime.Types.ReferenceValue.Editor
 
             Rect useReferenceRect = position;
             useReferenceRect.width = 0;
-            useReferenceRect.x = position.width;
+            useReferenceRect.x = position.width - padding;
             useReferenceRect.height = EditorGUIUtility.singleLineHeight;
 
             Rect valueRect = position;
             valueRect.height = EditorGUI.GetPropertyHeight(propertyValue);
-            valueRect.y += EditorGUIUtility.singleLineHeight + 5;
+            valueRect.y += EditorGUIUtility.singleLineHeight;
+            valueRect.width -= padding;
 
             GUIStyle style = new GUIStyle(EditorStyles.label)
             {
@@ -36,10 +38,9 @@ namespace Packages.PlanBArchitecture.Runtime.Types.ReferenceValue.Editor
             };
             Rect indentedRect = EditorGUI.IndentedRect(position);
 
-            const int padding = 10;
             indentedRect.x -= padding;
-            indentedRect.width += padding + 5;
-            indentedRect.height -= padding;
+            indentedRect.width += padding;
+            indentedRect.height -= padding * 2;
 
             EditorGUI.HelpBox(indentedRect, "", MessageType.None);
 
@@ -58,7 +59,7 @@ namespace Packages.PlanBArchitecture.Runtime.Types.ReferenceValue.Editor
         {
             SerializedProperty useReference = property.FindPropertyRelative("_useReference");
             string propertyName = useReference.boolValue ? "_value1" : "_value2";
-            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative(propertyName)) + EditorGUIUtility.singleLineHeight * 2f + 5;
+            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative(propertyName)) + EditorGUIUtility.singleLineHeight * 2f;
         }
     }
 }

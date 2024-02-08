@@ -1,0 +1,18 @@
+{
+    "name": "AudioService.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7532c538b4e2f47f389e50da75bf712b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

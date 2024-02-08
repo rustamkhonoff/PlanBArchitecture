@@ -9,14 +9,33 @@ namespace Services.AudioService.Editor
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUILayout.PropertyField(property.FindPropertyRelative("_key"));
             SerializedProperty randomProperty = property.FindPropertyRelative("_randomClip");
-            EditorGUILayout.PropertyField(randomProperty);
             bool random = randomProperty.boolValue;
             string fieldName = random ? "_randomClips" : "_clip";
-            EditorGUILayout.PropertyField(property.FindPropertyRelative(fieldName));
+            SerializedProperty valueProperty = property.FindPropertyRelative(fieldName);
+
+            Rect keyRect = position;
+            keyRect.height = EditorGUIUtility.singleLineHeight;
+            
+            Rect useRandomRect = position;
+            useRandomRect.height = EditorGUIUtility.singleLineHeight;
+            useRandomRect.y += EditorGUIUtility.singleLineHeight;
+            
+            Rect valueField = position;
+            valueField.height = EditorGUI.GetPropertyHeight(valueProperty);
+            valueField.y += EditorGUIUtility.singleLineHeight * 2;
+            
+            EditorGUI.PropertyField(keyRect, property.FindPropertyRelative("_key"));
+            EditorGUI.PropertyField(useRandomRect, property.FindPropertyRelative("_randomClip"));
+            EditorGUI.PropertyField(valueField, valueProperty, true);
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 0f;
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            SerializedProperty randomProperty = property.FindPropertyRelative("_randomClip");
+            bool random = randomProperty.boolValue;
+            string fieldName = random ? "_randomClips" : "_clip";
+            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative(fieldName)) + EditorGUIUtility.singleLineHeight * 2f;
+        }
     }
 }

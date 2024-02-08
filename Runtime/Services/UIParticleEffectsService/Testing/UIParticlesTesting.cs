@@ -1,5 +1,4 @@
 using Services.UIParticleEffectsService.Builder;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +16,7 @@ namespace Services.UIParticleEffectsService.Testing
             m_particleEffectsService = particleEffectsService;
         }
 
-        [Button]
+        [ContextMenu(nameof(Test))]
         private void Test()
         {
             m_particleEffectsService.Attract(_configuration);

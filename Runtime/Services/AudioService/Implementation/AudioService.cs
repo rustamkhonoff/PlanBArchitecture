@@ -41,6 +41,7 @@ namespace Services.AudioService.Implementation
         {
             SetBackgroundVolume(obj);
         }
+
         private void Impl_SetSoundVolume(float obj)
         {
             SetSoundVolume(obj);
@@ -225,26 +226,27 @@ namespace Services.AudioService.Implementation
                 return;
             }
 
+            Debug.LogError(audioMixerGroup.name);
             audioMixerGroup.audioMixer.SetFloat(paramKey, state ? 0f : -80f);
         }
 
-        public void SetAllSoundVolume(float volume, string paramKey = "volume")
+        public void SetAllSoundVolume(float volume)
         {
-            SetSoundVolume(volume, paramKey);
-            SetBackgroundVolume(volume, paramKey);
+            SetSoundVolume(volume);
+            SetBackgroundVolume(volume);
         }
 
-        public void SetSoundVolume(float volume, string paramKey = "volume")
+        public void SetSoundVolume(float volume)
         {
-            SetAudioMixerVolume(m_audioServiceStaticData.SoundGroup, volume, paramKey);
+            SetAudioMixerVolume(m_audioServiceStaticData.SoundGroup, volume, DefaultSoundVolumeKey);
         }
 
-        public void SetBackgroundVolume(float volume, string paramKey = "volume")
+        public void SetBackgroundVolume(float volume)
         {
-            SetAudioMixerVolume(m_audioServiceStaticData.BackgroundGroup, volume, paramKey);
+            SetAudioMixerVolume(m_audioServiceStaticData.BackgroundGroup, volume, DefaultBackgroundVolumeKey);
         }
 
-        public void SetAudioMixerVolume(AudioMixerGroup audioMixerGroup, float volume, string paramKey = "volume")
+        public void SetAudioMixerVolume(AudioMixerGroup audioMixerGroup, float volume, string paramKey)
         {
             if (audioMixerGroup == null)
             {
@@ -257,12 +259,12 @@ namespace Services.AudioService.Implementation
 
         public void SetBackgroundState(bool state)
         {
-            SetAudioMixerState(m_audioServiceStaticData.BackgroundGroup, state);
+            SetAudioMixerState(m_audioServiceStaticData.BackgroundGroup, state, DefaultBackgroundVolumeKey);
         }
 
         public void SetSoundState(bool state)
         {
-            SetAudioMixerState(m_audioServiceStaticData.SoundGroup, state);
+            SetAudioMixerState(m_audioServiceStaticData.SoundGroup, state, DefaultSoundVolumeKey);
         }
 
         public void SetAllSoundState(bool state)
@@ -309,6 +311,8 @@ namespace Services.AudioService.Implementation
                 Debug.LogError(text);
         }
 
+        private const string DefaultSoundVolumeKey = "soundVolume";
+        private const string DefaultBackgroundVolumeKey = "bgVolume";
         private bool DebugEnabled => m_stateHelper.DebugEnabled();
         private bool SoundEnabled => m_stateHelper.SoundEnabled();
         private bool BackgroundEnabled => m_stateHelper.BackgroundEnabled();

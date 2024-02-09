@@ -24,11 +24,11 @@ namespace Services.AudioService
         void StopBackground(AudioClip clip);
         AudioData AudioDataFor(string key);
         AudioClip AudioClipFor(string key);
-        void SetAudioMixerState(AudioMixerGroup audioMixerGroup, bool state, string paramKey = "volume");
-        void SetAudioMixerVolume(AudioMixerGroup audioMixerGroup, float volume, string paramKey = "volume");
-        void SetSoundVolume(float volume, string paramKey = "volume");
-        void SetBackgroundVolume(float volume, string paramKey = "volume");
-        void SetAllSoundVolume(float volume, string paramKey = "volume");
+        void SetAudioMixerState(AudioMixerGroup audioMixerGroup, bool state, string paramKey);
+        void SetAudioMixerVolume(AudioMixerGroup audioMixerGroup, float volume, string paramKey);
+        void SetSoundVolume(float volume);
+        void SetBackgroundVolume(float volume);
+        void SetAllSoundVolume(float volume);
         void SetSoundState(bool state);
         void SetBackgroundState(bool state);
         void SetAllSoundState(bool state);

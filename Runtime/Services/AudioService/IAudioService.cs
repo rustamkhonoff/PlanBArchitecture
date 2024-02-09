@@ -14,6 +14,8 @@ namespace Services.AudioService
         void PlayWithSource(AudioSource source, AudioClip audioClip, float volume = 1f);
         void PlayAt(string key, Vector3 position, float volume = 1f);
         void PlayAt(AudioClip clip, Vector3 position, float volume = 1f);
+        void SetBackground(AudioClip clip, float volume = 1f, bool loop = true);
+        void SetBackground(string key, float volume = 1f, bool loop = true);
         AudioSource PlayBackground(string key, float volume = 1f, bool loop = true, AudioMixerGroup audioMixer = null);
         AudioSource PlayBackground(AudioClip clip, float volume = 1f, bool loop = true, AudioMixerGroup audioMixer = null);
         AudioSource GetBackgroundAudioSource(string key);

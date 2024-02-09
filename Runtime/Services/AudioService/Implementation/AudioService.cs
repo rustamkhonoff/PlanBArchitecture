@@ -18,13 +18,14 @@ namespace Services.AudioService.Implementation
         private readonly IAudioServiceStateHelper m_stateHelper;
 
         private AudioSource m_baseSource;
+        private AudioSource m_baseBackgroundSource;
 
         public AudioService(AudioServiceStaticData audioServiceStaticData, IAudioServiceStateHelper stateHelper)
         {
             m_stateHelper = stateHelper;
             m_audioServiceStaticData = audioServiceStaticData;
             m_soundDatas = CreateSoundDatasDictionary(m_audioServiceStaticData.AudioDatas);
-            CreateBaseAudioSource();
+            CreateBaseAudioSources();
         }
 
         public void Play(AudioClip clip, float volume = 1)
@@ -77,6 +78,29 @@ namespace Services.AudioService.Implementation
             }
 
             AudioSource.PlayClipAtPoint(clip, position, volume);
+        }
+
+        public void SetBackground(AudioClip clip, float volume = 1f, bool loop = true)
+        {
+            if (!BackgroundEnabled)
+                return;
+
+            if (clip == null)
+            {
+                LogError("Clip equals NULL");
+                return;
+            }
+
+            m_baseBackgroundSource.Stop();
+            m_baseBackgroundSource.loop = loop;
+            m_baseBackgroundSource.volume = volume;
+            m_baseBackgroundSource.clip = clip;
+            m_baseBackgroundSource.Play();
+        }
+
+        public void SetBackground(string key, float volume = 1, bool loop = true)
+        {
+            SetBackground(AudioClipFor(key), volume, loop);
         }
 
         public void PlayAt(string key, Vector3 position, float volume = 1)
@@ -234,15 +258,25 @@ namespace Services.AudioService.Implementation
             SetSoundState(state);
         }
 
-        private void CreateBaseAudioSource()
+        private void CreateBaseAudioSources()
         {
-            if (m_baseSource != null)
-                return;
-            m_baseSource = new GameObject("AudioService OneShootSource").AddComponent<AudioSource>();
-            m_baseSource.spatialBlend = 0f;
-            m_baseSource.playOnAwake = false;
-            m_baseSource.outputAudioMixerGroup = m_audioServiceStaticData.SoundGroup;
-            Object.DontDestroyOnLoad(m_baseSource.gameObject);
+            if (m_baseSource == null)
+            {
+                m_baseSource = new GameObject("AudioService OneShootSource").AddComponent<AudioSource>();
+                m_baseSource.spatialBlend = 0f;
+                m_baseSource.playOnAwake = false;
+                m_baseSource.outputAudioMixerGroup = m_audioServiceStaticData.SoundGroup;
+                Object.DontDestroyOnLoad(m_baseSource.gameObject);
+            }
+
+            if (m_baseBackgroundSource == null)
+            {
+                m_baseBackgroundSource = new GameObject("AudioService BackgroundSource").AddComponent<AudioSource>();
+                m_baseBackgroundSource.spatialBlend = 0f;
+                m_baseBackgroundSource.playOnAwake = false;
+                m_baseBackgroundSource.outputAudioMixerGroup = m_audioServiceStaticData.BackgroundGroup;
+                Object.DontDestroyOnLoad(m_baseBackgroundSource.gameObject);
+            }
         }
 
         private AudioSource CreateAudioSource()

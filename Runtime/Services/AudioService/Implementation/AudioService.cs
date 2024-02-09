@@ -225,8 +225,6 @@ namespace Services.AudioService.Implementation
                 LogError("AudioMixerGroup is NULL");
                 return;
             }
-
-            Debug.LogError(audioMixerGroup.name);
             audioMixerGroup.audioMixer.SetFloat(paramKey, state ? 0f : -80f);
         }
 

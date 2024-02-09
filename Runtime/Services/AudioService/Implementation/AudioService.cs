@@ -26,7 +26,26 @@ namespace Services.AudioService.Implementation
             m_audioServiceStaticData = audioServiceStaticData;
             m_soundDatas = CreateSoundDatasDictionary(m_audioServiceStaticData.AudioDatas);
             CreateBaseAudioSources();
+            RegisterEvents(stateHelper);
         }
+
+        private void RegisterEvents(IAudioServiceStateHelper stateHelper)
+        {
+            stateHelper.SoundStateChanged += SetSoundState;
+            stateHelper.BackgroundStateChanged += SetBackgroundState;
+            stateHelper.BackgroundVolumeChanged += Impl_SetBackgroundVolume;
+            stateHelper.SoundVolumeChanged += Impl_SetSoundVolume;
+        }
+
+        private void Impl_SetBackgroundVolume(float obj)
+        {
+            SetBackgroundVolume(obj);
+        }
+        private void Impl_SetSoundVolume(float obj)
+        {
+            SetSoundVolume(obj);
+        }
+
 
         public void Play(AudioClip clip, float volume = 1)
         {
@@ -218,7 +237,7 @@ namespace Services.AudioService.Implementation
         public void SetAllSoundVolume(float volume, string paramKey = "volume")
         {
             SetSoundVolume(volume, paramKey);
-            SetBackgroundSoundVolume(volume, paramKey);
+            SetBackgroundVolume(volume, paramKey);
         }
 
         public void SetSoundVolume(float volume, string paramKey = "volume")
@@ -226,7 +245,7 @@ namespace Services.AudioService.Implementation
             SetAudioMixerVolume(m_audioServiceStaticData.SoundGroup, volume, paramKey);
         }
 
-        public void SetBackgroundSoundVolume(float volume, string paramKey = "volume")
+        public void SetBackgroundVolume(float volume, string paramKey = "volume")
         {
             SetAudioMixerVolume(m_audioServiceStaticData.BackgroundGroup, volume, paramKey);
         }
@@ -242,7 +261,7 @@ namespace Services.AudioService.Implementation
             audioMixerGroup.audioMixer.SetFloat(paramKey, Mathf.Lerp(-80, 0, volume));
         }
 
-        public void SetBackgroundSoundState(bool state)
+        public void SetBackgroundState(bool state)
         {
             SetAudioMixerState(m_audioServiceStaticData.BackgroundGroup, state);
         }
@@ -254,7 +273,7 @@ namespace Services.AudioService.Implementation
 
         public void SetAllSoundState(bool state)
         {
-            SetBackgroundSoundState(state);
+            SetBackgroundState(state);
             SetSoundState(state);
         }
 

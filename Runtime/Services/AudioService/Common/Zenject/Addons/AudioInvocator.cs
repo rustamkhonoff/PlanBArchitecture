@@ -18,7 +18,7 @@ namespace Services.AudioService.Common.Zenject.Addons
 
         public void PlaySound()
         {
-            _audioData.InvokeAction(m_audioService.Play, m_audioService.Play);
+            _audioData.InvokeAction(a => m_audioService.Play(a), a => m_audioService.Play(a));
         }
     }
 }

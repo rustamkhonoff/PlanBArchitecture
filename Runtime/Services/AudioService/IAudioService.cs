@@ -6,8 +6,6 @@ namespace Services.AudioService
 {
     public interface IAudioService
     {
-        void Play(string key) => Play(key, 1f);
-        void Play(AudioClip clip) => Play(clip, 1f);
         void Play(string key, float volume = 1f);
         void Play(AudioClip clip, float volume = 1f);
         void PlayWithSource(AudioSource source, string key, float volume = 1f);
@@ -29,10 +27,10 @@ namespace Services.AudioService
         void SetAudioMixerState(AudioMixerGroup audioMixerGroup, bool state, string paramKey = "volume");
         void SetAudioMixerVolume(AudioMixerGroup audioMixerGroup, float volume, string paramKey = "volume");
         void SetSoundVolume(float volume, string paramKey = "volume");
-        void SetBackgroundSoundVolume(float volume, string paramKey = "volume");
+        void SetBackgroundVolume(float volume, string paramKey = "volume");
         void SetAllSoundVolume(float volume, string paramKey = "volume");
         void SetSoundState(bool state);
-        void SetBackgroundSoundState(bool state);
+        void SetBackgroundState(bool state);
         void SetAllSoundState(bool state);
     }
 }

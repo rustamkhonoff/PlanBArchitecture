@@ -101,9 +101,6 @@ namespace Services.AudioService.Implementation
 
         public void SetBackground(AudioClip clip, float volume = 1f, bool loop = true)
         {
-            if (!BackgroundEnabled)
-                return;
-
             if (clip == null)
             {
                 LogError("Clip equals NULL");
@@ -134,9 +131,6 @@ namespace Services.AudioService.Implementation
 
         public AudioSource PlayBackground(AudioClip clip, float volume = 1F, bool loop = true, AudioMixerGroup audioMixer = null)
         {
-            if (!BackgroundEnabled)
-                return null;
-
             if (clip == null)
             {
                 LogError("Clip equals NULL");

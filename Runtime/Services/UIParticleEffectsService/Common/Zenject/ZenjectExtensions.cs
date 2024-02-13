@@ -1,3 +1,4 @@
+#if ZENJECT
 using UnityEngine;
 using Zenject;
 
@@ -16,3 +17,4 @@ namespace Services.UIParticleEffectsService.Common.Zenject
         }
     }
 }
+#endif

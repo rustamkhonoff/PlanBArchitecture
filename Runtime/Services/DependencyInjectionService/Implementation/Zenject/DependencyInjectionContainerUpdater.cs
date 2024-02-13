@@ -1,4 +1,6 @@
-﻿using Zenject;
+﻿#if ZENJECT
+using Zenject;
+
 
 namespace Services.DependencyInjectionService.Implementation.Zenject
 {
@@ -20,3 +22,4 @@ namespace Services.DependencyInjectionService.Implementation.Zenject
         }
     }
 }
+#endif

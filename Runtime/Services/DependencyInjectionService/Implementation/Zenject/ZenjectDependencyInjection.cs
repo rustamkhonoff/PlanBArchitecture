@@ -1,3 +1,4 @@
+#if ZENJECT
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -80,3 +81,4 @@ namespace Services.DependencyInjectionService.Implementation.Zenject
         #endregion
     }
 }
+#endif

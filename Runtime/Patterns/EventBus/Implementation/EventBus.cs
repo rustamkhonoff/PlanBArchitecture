@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Patterns.EventBus.Implementation
 {
-    public class EventBus : IEventBus
+    internal class EventBus : IEventBus
     {
         private readonly Dictionary<Type, List<EventHandlerWrapper>> eventHandlers = new();
 

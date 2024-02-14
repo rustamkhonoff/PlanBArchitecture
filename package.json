@@ -18,8 +18,5 @@
       "description": "Description for sample 1",
       "path": "Other~/Test 1"
     }
-  ],
-  "dependencies": {
-    "com.coffee.ui-particle": "https://github.com/mob-sakai/ParticleEffectForUGUI.git"
-  }
+  ]
 }

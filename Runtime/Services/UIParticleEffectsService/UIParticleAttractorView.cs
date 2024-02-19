@@ -1,19 +1,16 @@
+#if COFFEE_PARTICLES
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+
 using Coffee.UIExtensions;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Services.UIParticleEffectsService
 {
-    public enum ForceAmountType
-    {
-        Small = 0,
-        Medium = 1,
-        Big = 2
-    }
+  
 
     public class UIParticleAttractorView : MonoBehaviour
     {
@@ -21,8 +18,8 @@ namespace Services.UIParticleEffectsService
 
         [SerializeField] private UIParticleAttractor _particleAttractor;
         [SerializeField] private UIParticle _uiParticle;
-
-        public void Attract(UIParticleTextureData textureData, int amount, Vector3 startScreenSpacePos, Vector3 targetScreenSpacePos,
+        public void Attract(UIParticleTextureData textureData, int amount, Vector3 startScreenSpacePos,
+            Vector3 targetScreenSpacePos,
             ParticleSystem particlePrefab,
             ForceAmountType forceAmountType,
             Action onAttracted = default, Action onDestroying = default,
@@ -250,3 +247,4 @@ namespace Services.UIParticleEffectsService
         }
     }
 }
+#endif

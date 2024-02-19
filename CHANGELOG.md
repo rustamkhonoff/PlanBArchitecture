@@ -6,7 +6,6 @@
 ### Migration
 - Add "COFFEE_PARTICLES" to ScriptingDefineSymbols to enable its implementation
 
-
 ## [1.0.8]
 ### New
 - Added UI Service

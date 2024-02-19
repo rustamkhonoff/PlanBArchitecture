@@ -4,11 +4,11 @@ using Zenject;
 
 namespace Services.UI.Extensions.Zenject
 {
-    internal class UIInstaller : MonoInstaller
+    internal static class UIInstaller
     {
-        public override void InstallBindings()
+        public static void AddUIService(this DiContainer diContainer)
         {
-            Container
+            diContainer
                 .BindInterfacesAndSelfTo<UIService>()
                 .AsSingle()
                 .NonLazy();

@@ -4,7 +4,7 @@ using Zenject;
 
 namespace Services.UI.Extensions.Zenject
 {
-    internal static class UIInstaller
+    public static class UIInstaller
     {
         public static void AddUIService(this DiContainer diContainer)
         {

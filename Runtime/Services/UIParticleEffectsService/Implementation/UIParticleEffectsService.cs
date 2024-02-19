@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 using System.Runtime.CompilerServices;
 using Services.UIParticleEffectsService.Builder;
 using UnityEngine;
@@ -63,3 +64,4 @@ namespace Services.UIParticleEffectsService.Implementation
         }
     }
 }
+#endif

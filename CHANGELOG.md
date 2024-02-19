@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.9]
+### New
+- Changed dependency of https://github.com/mob-sakai/ParticleEffectForUGUI]
+### Migration
+- Add "COFFEE_PARTICLES" to ScriptingDefineSymbols to enable its implementation
+
 
 ## [1.0.8]
 ### New

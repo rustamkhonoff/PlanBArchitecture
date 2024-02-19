@@ -10,8 +10,39 @@ namespace Services.Maid
         private const string InfoColor = nameof(Color.white);
         private const string WarningColor = nameof(Color.yellow);
         private const string ErrorColor = nameof(Color.red);
+        private const string SuccessColor = nameof(Color.green);
 
         private const string ConditionString = "MAID_LOGS_ENABLED";
+
+        #region Success
+
+        [Conditional(ConditionString)]
+        public static void LogSuccess(object message)
+        {
+            Debug.Log(FormatMessage(SuccessColor, message));
+        }
+
+        [Conditional(ConditionString)]
+        public static void LogSuccess(string category, object message)
+        {
+            Debug.Log(FormatMessageWithCategory(SuccessColor, category, message));
+        }
+
+        [Conditional(ConditionString)]
+        public static void LogFormatSuccess(string format, params object[] args)
+        {
+            Debug.Log(FormatMessage(SuccessColor, string.Format(format, args)));
+        }
+
+        [Conditional(ConditionString)]
+        public static void LogFormatSuccess(string category, string format, params object[] args)
+        {
+            Debug.Log(FormatMessageWithCategory(SuccessColor, category, string.Format(format, args)));
+        }
+
+        #endregion
+        
+        #region Log
 
         [Conditional(ConditionString)]
         public static void Log(object message)
@@ -37,6 +68,10 @@ namespace Services.Maid
             Debug.Log(FormatMessageWithCategory(InfoColor, category, string.Format(format, args)));
         }
 
+        #endregion
+
+        #region Warning
+
         [Conditional(ConditionString)]
         public static void LogWarning(object message)
         {
@@ -60,6 +95,10 @@ namespace Services.Maid
         {
             Debug.LogWarningFormat(FormatMessageWithCategory(WarningColor, category, string.Format(format, args)));
         }
+
+        #endregion
+
+        #region Error
 
         [Conditional(ConditionString)]
         public static void LogError(object message)
@@ -85,6 +124,10 @@ namespace Services.Maid
             Debug.LogErrorFormat(FormatMessageWithCategory(ErrorColor, category, string.Format(format, args)));
         }
 
+        #endregion
+
+        #region Exception
+
         [Conditional(ConditionString)]
         public static void LogException(Exception exception)
         {
@@ -97,6 +140,10 @@ namespace Services.Maid
             Debug.LogError(FormatMessageWithCategory(ErrorColor, category, exception.Message));
         }
 
+        #endregion
+
+        #region Helpers
+
         private static string FormatMessage(string color, object message)
         {
             return $"<color={color}>{message}</color>";
@@ -106,5 +153,7 @@ namespace Services.Maid
         {
             return $"<color={color}><b>[{category}]</b> {message}</color>";
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,112 +10,80 @@ namespace Patterns.Mediator.Implementation
 {
     public class Mediator : IMediator
     {
-        private readonly IMediatorTypeFactory m_mediatorTypeFactory;
-        private readonly Dictionary<Type, Type> m_mappedNotificationHandlers;
-        private readonly Dictionary<Type, IList> m_cachedNotificationHandlerInstances;
-
-        private readonly Dictionary<Type, Type> m_mappedRequestHandlers;
-        private readonly Dictionary<Type, object> m_cachedRequestHandlerInstances;
+        private readonly IMediatorTypeFactory _mediatorTypeFactory;
+        private readonly Dictionary<Type, List<Type>> _notificationHandlerTypes;
+        private readonly Dictionary<Type, Type> _requestHandlerTypes;
+        private readonly Dictionary<Type, object> _handlerInstances = new Dictionary<Type, object>();
 
         public Mediator(IEnumerable<Assembly> assemblies, IMediatorTypeFactory mediatorTypeFactory)
         {
-            m_mediatorTypeFactory = mediatorTypeFactory;
-
-            m_cachedNotificationHandlerInstances = new Dictionary<Type, IList>();
-            m_mappedRequestHandlers = new Dictionary<Type, Type>();
-
-            m_mappedNotificationHandlers = new Dictionary<Type, Type>();
-            m_cachedRequestHandlerInstances = new Dictionary<Type, object>();
+            _mediatorTypeFactory = mediatorTypeFactory;
+            _notificationHandlerTypes = new Dictionary<Type, List<Type>>();
+            _requestHandlerTypes = new Dictionary<Type, Type>();
 
             foreach (Assembly assembly in assemblies)
             {
-                foreach (Type type in assembly.GetTypes())
+                var types = assembly.GetTypes().Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
+                    (i.GetGenericTypeDefinition() == typeof(INotificationHandler<>) ||
+                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
+
+                foreach (Type type in types)
                 {
-                    Type[] allGenericInterfaces = type
-                        .GetInterfaces()
-                        .Where(i => i.IsGenericType)
-                        .ToArray();
+                    var handlerInterfaces = type.GetInterfaces().Where(i => i.IsGenericType);
+                    foreach (Type handlerInterface in handlerInterfaces)
+                    {
+                        Type genericType = handlerInterface.GetGenericTypeDefinition();
+                        var genericArguments = handlerInterface.GetGenericArguments();
 
-                    Type[] notificationHandlerTypes = allGenericInterfaces
-                        .Where(a => a.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
-                        .SelectMany(a => a.GetGenericArguments())
-                        .ToArray();
-                    foreach (Type item in notificationHandlerTypes)
-                        m_mappedNotificationHandlers.Add(type, item);
+                        if (genericType == typeof(INotificationHandler<>))
+                        {
+                            Type notificationType = genericArguments[0];
+                            if (!_notificationHandlerTypes.ContainsKey(notificationType))
+                            {
+                                _notificationHandlerTypes[notificationType] = new List<Type>();
+                            }
 
-                    Type[] requestHandlerTypes = allGenericInterfaces
-                        .Where(a => a.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
-                        .ToArray();
-                    foreach (Type item in requestHandlerTypes)
-                        m_mappedRequestHandlers.Add(item.GetGenericArguments()[0], type);
+                            _notificationHandlerTypes[notificationType].Add(type);
+                        }
+                        else if (genericType == typeof(IRequestHandler<,>))
+                        {
+                            Type requestType = genericArguments[0];
+                            _requestHandlerTypes[requestType] = type;
+                        }
+                    }
                 }
             }
         }
 
         public void Publish<T>(T notification) where T : INotification
         {
-            Type notificationType = notification.GetType();
+            Type notificationType = typeof(T);
+            if (!_notificationHandlerTypes.TryGetValue(notificationType, out var handlerTypes))
+                return;
 
-            if (!m_cachedNotificationHandlerInstances.TryGetValue(notificationType, out IList handlers))
-            {
-                IList newHandlersList = m_mappedNotificationHandlers
-                    .Where(a => a.Value == notificationType)
-                    .Select(a => CreateInstanceOf(a.Key))
-                    .ToList();
-                m_cachedNotificationHandlerInstances.Add(notificationType, newHandlersList);
-                handlers = newHandlersList;
-            }
-
-            if (handlers == null)
-                throw new NullReferenceException($"Can' create handlers for {notificationType}");
-
-            PublishBase(notification, handlers);
+            foreach (object handler in handlerTypes.Select(GetHandlerInstance))
+                ((INotificationHandler<T>)handler).Handle(notification);
         }
 
-        private void PublishBase<T>(T input, IEnumerable handlers) where T : INotification
-        {
-            foreach (INotificationHandler<T> handler in handlers.OfType<INotificationHandler<T>>())
-                handler.Handle(input);
-        }
-
-        public T Send<T>(IRequest<T> request)
+        public TResponse Send<TResponse>(IRequest<TResponse> request)
         {
             Type requestType = request.GetType();
+            if (!_requestHandlerTypes.TryGetValue(requestType, out Type handlerType))
+                throw new InvalidOperationException($"Handler not found for request type {requestType.Name}");
 
-            Type requiredType = requestType
-                .GetInterfaces()
-                .First(a => a.IsGenericType && a.GetGenericTypeDefinition() == typeof(IRequest<>))
-                .GetGenericArguments()
-                .First();
-
-            if (!m_cachedRequestHandlerInstances.TryGetValue(requestType, out object handler))
-            {
-                if (m_mappedRequestHandlers.TryGetValue(requestType, out Type handlerType))
-                {
-                    object newHandlerInstance = CreateInstanceOf(handlerType);
-                    m_cachedRequestHandlerInstances.Add(requestType, newHandlerInstance);
-                    handler = newHandlerInstance;
-                }
-            }
-
-            if (handler != null)
-                return SendBase(handler, request, requestType, requiredType);
-
-            throw new NullReferenceException($"Can't create handler for {requestType}");
+            object handler = GetHandlerInstance(handlerType);
+            return ((IRequestHandler<IRequest<TResponse>, TResponse>)handler).Handle(request);
         }
 
-        private T SendBase<T>(object instance, IRequest<T> request, Type requestType, Type requiredType)
+        private object GetHandlerInstance(Type handlerType)
         {
-            Type requestHandlerType = typeof(IRequestHandler<,>);
-            Type genericRequestHandler = requestHandlerType.MakeGenericType(requestType, requiredType);
-            MethodInfo method = genericRequestHandler.GetMethod("Process");
-            object result = method?.Invoke(instance, new object[] { request });
-            return (T)result;
-        }
+            if (_handlerInstances.TryGetValue(handlerType, out object handler))
+                return handler;
 
-        private object CreateInstanceOf(Type type)
-        {
-            return m_mediatorTypeFactory.CreateInstanceFor(type);
+            handler = _mediatorTypeFactory.CreateInstanceFor(handlerType);
+            _handlerInstances[handlerType] = handler;
+
+            return handler;
         }
     }
 }

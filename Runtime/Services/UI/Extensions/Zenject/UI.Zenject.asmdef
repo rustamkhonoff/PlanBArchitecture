@@ -1,0 +1,18 @@
+{
+    "name": "UI.Zenject",
+    "rootNamespace": "",
+    "references": [
+        "GUID:79dcdfb69b1bf4482a7f1952e749f51b",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:0d3d6df8574204d378e72bea32b78d38"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

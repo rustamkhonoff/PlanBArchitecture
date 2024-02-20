@@ -1,6 +1,6 @@
 {
   "name": "com.rustamkhonoff.planbarchitecture",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "displayName": "Plan B Architecture",
   "description": "Service and System based architecture",
   "unity": "2021.3",
@@ -18,5 +18,8 @@
       "description": "Description for sample 1",
       "path": "Other~/Test 1"
     }
-  ]
+  ],
+  "dependencies": {
+    "com.unity.localization": ""
+  }
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0]
+### New
+- Added Localization Service
+- Added UnityLocalization Implementation of Localization Service
+
 ## [1.0.9]
 ### New
 - Changed dependency of https://github.com/mob-sakai/ParticleEffectForUGUI]

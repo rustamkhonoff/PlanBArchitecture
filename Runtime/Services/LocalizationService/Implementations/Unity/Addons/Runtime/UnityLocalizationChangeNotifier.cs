@@ -1,0 +1,27 @@
+using System;
+using Services.LocalizationService.Runtime;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+
+namespace Services.LocalizationService.Unity
+{
+    public class UnityLocalizationChangeNotifier : ILocalizationChangeNotifier
+    {
+        public event Action Changed;
+
+        public void Initialize()
+        {
+            LocalizationSettings.SelectedLocaleChanged += Notify;
+        }
+
+        private void Notify(Locale obj)
+        {
+            Changed?.Invoke();
+        }
+
+        public void Dispose()
+        {
+            LocalizationSettings.SelectedLocaleChanged -= Notify;
+        }
+    }
+}

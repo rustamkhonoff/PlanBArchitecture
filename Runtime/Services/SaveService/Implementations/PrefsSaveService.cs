@@ -18,23 +18,28 @@ namespace Services.SaveService.Implementations
                 AddSavesMap(savesMap);
         }
 
-        public void Save<T>(T data) where T : class
+        public void Save<T>(T data, Func<T, string> customDataFormatter = null) where T : class
         {
             if (m_cachedMap.TryGetValue(typeof(T), out string key))
-                PlayerPrefs.SetString(key, JsonUtility.ToJson(data));
+            {
+                string textData = customDataFormatter != null ? customDataFormatter(data) : JsonUtility.ToJson(data);
+                PlayerPrefs.SetString(key, textData);
+            }
             else
+            {
                 Debug.LogError($"[SAVE] There is no Key for given type {typeof(T)}");
+            }
         }
 
-        public T Load<T>(Func<T> newInstanceFunc = null) where T : class
+        public T Load<T>(Func<T> newInstanceFunc = null, Func<string, T> customDataFormatter = null) where T : class
         {
             if (m_cachedMap.TryGetValue(typeof(T), out string key))
             {
                 if (!PlayerPrefs.HasKey(key))
                     return Internal_TryCreateInstance(newInstanceFunc);
 
-                string json = PlayerPrefs.GetString(key);
-                T data = JsonUtility.FromJson<T>(json);
+                string textData = PlayerPrefs.GetString(key);
+                T data = customDataFormatter != null ? customDataFormatter(textData) : JsonUtility.FromJson<T>(textData);
                 return data;
             }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.0]
+### New
+- Added Save Serices
+- Added Handler to Patterns
+
 ## [1.2.0]
 ### New
 - Added Localization Service

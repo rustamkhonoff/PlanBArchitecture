@@ -1,10 +1,9 @@
 {
-    "name": "UI.Zenject",
+    "name": "SaveService.Zenject",
     "rootNamespace": "",
     "references": [
-        "GUID:79dcdfb69b1bf4482a7f1952e749f51b",
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
-        "GUID:1fa27f618a38043baa2ee2ca03b78433"
+        "GUID:d2d17b06b46584372b5cc9a1912ebca0",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,10 @@
 # Changelog
 
+
+## [1.3.1]
+### Fix
+- Fixed Runtime Localization
+
 ## [1.3.0]
 ### New
 - Added Save Serices

@@ -15,8 +15,8 @@ namespace Services.LocalizationService.Runtime
         public static RuntimeLocalizedTMP Convert(TMP_Text text,
             string key,
             string table = "Base String Table",
-            string format = "{0}",
-            Func<object[]> argumentsFunc = null)
+            Func<object[]> argumentsFunc = null,
+            string format = "{0}")
         {
             RuntimeLocalizedTMP runtimeText = text.gameObject.AddComponent<RuntimeLocalizedTMP>();
             runtimeText.Setup(text, key, table, format, argumentsFunc);
@@ -46,7 +46,7 @@ namespace Services.LocalizationService.Runtime
         public void UpdateText()
         {
             if (LocalizationService != null)
-                m_text.SetText(LocalizationService.GetString(m_key, m_table, m_format, m_argumentsFunc?.Invoke()));
+                m_text.SetText(string.Format(m_format, LocalizationService.GetString(m_key, m_table, m_argumentsFunc?.Invoke())));
         }
 
 

@@ -25,9 +25,9 @@ namespace Services.LocalizationService.Runtime
         }
 
         public static IRuntimeLocalizedTMP ConvertToUnityRuntimeLocalizedTMP(this TMP_Text text, string key,
-            string table = "Base String Table", string format = "{0}", Func<object[]> argumentsFunc = null)
+            string table = "Base String Table", Func<object[]> argumentsFunc = null, string format = "{0}")
         {
-            return RuntimeLocalizedTMP.Convert(text, key, table, format, argumentsFunc);
+            return RuntimeLocalizedTMP.Convert(text, key, table, argumentsFunc, format);
         }
     }
 }

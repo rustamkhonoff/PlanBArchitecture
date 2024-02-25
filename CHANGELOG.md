@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.1]
+### Fix
+- Fixed Send Request in Mediator
+### New
+- Added IRequestHandler without return type (void)
+
+## [1.3.1]
+### Fix
+- Fixed Runtime Localization
 
 ## [1.3.1]
 ### Fix

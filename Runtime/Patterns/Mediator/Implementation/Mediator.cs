@@ -10,21 +10,25 @@ namespace Patterns.Mediator.Implementation
 {
     public class Mediator : IMediator
     {
-        private readonly IMediatorTypeFactory _mediatorTypeFactory;
-        private readonly Dictionary<Type, List<Type>> _notificationHandlerTypes;
-        private readonly Dictionary<Type, Type> _requestHandlerTypes;
-        private readonly Dictionary<Type, object> _handlerInstances = new Dictionary<Type, object>();
+        private readonly IMediatorTypeFactory m_typeFactory;
+        private readonly Dictionary<Type, List<Type>> m_notificationHandlerTypes;
+        private readonly Dictionary<Type, Type> m_requestHandlerTypes;
+        private readonly Dictionary<Type, object> m_handlerInstances;
+        private readonly Dictionary<Type, RequestHandlerBase> m_requestHandlers;
 
-        public Mediator(IEnumerable<Assembly> assemblies, IMediatorTypeFactory mediatorTypeFactory)
+        public Mediator(IEnumerable<Assembly> assemblies, IMediatorTypeFactory typeFactory)
         {
-            _mediatorTypeFactory = mediatorTypeFactory;
-            _notificationHandlerTypes = new Dictionary<Type, List<Type>>();
-            _requestHandlerTypes = new Dictionary<Type, Type>();
+            m_typeFactory = typeFactory;
+            m_notificationHandlerTypes = new Dictionary<Type, List<Type>>();
+            m_requestHandlerTypes = new Dictionary<Type, Type>();
+            m_handlerInstances = new Dictionary<Type, object>();
+            m_requestHandlers = new Dictionary<Type, RequestHandlerBase>();
 
             foreach (Assembly assembly in assemblies)
             {
                 var types = assembly.GetTypes().Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
                     (i.GetGenericTypeDefinition() == typeof(INotificationHandler<>) ||
+                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
                      i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
 
                 foreach (Type type in types)
@@ -38,17 +42,17 @@ namespace Patterns.Mediator.Implementation
                         if (genericType == typeof(INotificationHandler<>))
                         {
                             Type notificationType = genericArguments[0];
-                            if (!_notificationHandlerTypes.ContainsKey(notificationType))
+                            if (!m_notificationHandlerTypes.ContainsKey(notificationType))
                             {
-                                _notificationHandlerTypes[notificationType] = new List<Type>();
+                                m_notificationHandlerTypes[notificationType] = new List<Type>();
                             }
 
-                            _notificationHandlerTypes[notificationType].Add(type);
+                            m_notificationHandlerTypes[notificationType].Add(type);
                         }
-                        else if (genericType == typeof(IRequestHandler<,>))
+                        else if (genericType == typeof(IRequestHandler<,>) || genericType == typeof(IRequestHandler<>))
                         {
                             Type requestType = genericArguments[0];
-                            _requestHandlerTypes[requestType] = type;
+                            m_requestHandlerTypes[requestType] = type;
                         }
                     }
                 }
@@ -58,30 +62,64 @@ namespace Patterns.Mediator.Implementation
         public void Publish<T>(T notification) where T : INotification
         {
             Type notificationType = typeof(T);
-            if (!_notificationHandlerTypes.TryGetValue(notificationType, out var handlerTypes))
+            if (!m_notificationHandlerTypes.TryGetValue(notificationType, out var handlerTypes))
                 return;
 
-            foreach (object handler in handlerTypes.Select(GetHandlerInstance))
+            foreach (object handler in handlerTypes.Select(GetOrCreateHandlerInstance))
                 ((INotificationHandler<T>)handler).Handle(notification);
         }
 
         public TResponse Send<TResponse>(IRequest<TResponse> request)
         {
             Type requestType = request.GetType();
-            if (!_requestHandlerTypes.TryGetValue(requestType, out Type handlerType))
+
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (!m_requestHandlerTypes.TryGetValue(requestType, out Type handlerType))
                 throw new InvalidOperationException($"Handler not found for request type {requestType.Name}");
 
-            object handler = GetHandlerInstance(handlerType);
-            return ((IRequestHandler<IRequest<TResponse>, TResponse>)handler).Handle(request);
+            if (!m_requestHandlers.TryGetValue(requestType, out RequestHandlerBase wrapperInstance))
+            {
+                Type wrapperType = typeof(RequestHandlerWrapperImpl<,>).MakeGenericType(requestType, typeof(TResponse));
+                RequestHandlerBase wrapper = (RequestHandlerBase)Activator.CreateInstance(wrapperType);
+                wrapperInstance = wrapper;
+                m_requestHandlers.Add(requestType, wrapper);
+            }
+
+            object handlerInstance = GetOrCreateHandlerInstance(handlerType);
+            return (TResponse)wrapperInstance.Handle(request, handlerInstance);
         }
 
-        private object GetHandlerInstance(Type handlerType)
+        public void Send<T>(T request) where T : IRequest
         {
-            if (_handlerInstances.TryGetValue(handlerType, out object handler))
+            Type requestType = request.GetType();
+
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (!m_requestHandlerTypes.TryGetValue(requestType, out Type handlerType))
+                throw new InvalidOperationException($"Handler not found for request type {requestType.Name}");
+
+            if (!m_requestHandlers.TryGetValue(requestType, out RequestHandlerBase wrapperInstance))
+            {
+                Type wrapperType = typeof(RequestHandlerWrapperImpl<>).MakeGenericType(requestType);
+                RequestHandlerBase wrapper = (RequestHandlerBase)Activator.CreateInstance(wrapperType);
+                wrapperInstance = wrapper;
+                m_requestHandlers.Add(requestType, wrapper);
+            }
+
+            object handlerInstance = GetOrCreateHandlerInstance(handlerType);
+            wrapperInstance.Handle(request, handlerInstance);
+        }
+
+        private object GetOrCreateHandlerInstance(Type handlerType)
+        {
+            if (m_handlerInstances.TryGetValue(handlerType, out object handler))
                 return handler;
 
-            handler = _mediatorTypeFactory.CreateInstanceFor(handlerType);
-            _handlerInstances[handlerType] = handler;
+            handler = m_typeFactory.CreateInstanceFor(handlerType);
+            m_handlerInstances[handlerType] = handler;
 
             return handler;
         }

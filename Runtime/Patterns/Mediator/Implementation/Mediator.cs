@@ -5,6 +5,7 @@ using System.Reflection;
 using Patterns.Mediator.Interfaces;
 using Patterns.Mediator.Publisher;
 using Patterns.Mediator.Sender;
+using UnityEngine;
 
 namespace Patterns.Mediator.Implementation
 {
@@ -27,9 +28,10 @@ namespace Patterns.Mediator.Implementation
             foreach (Assembly assembly in assemblies)
             {
                 var types = assembly.GetTypes().Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
-                    (i.GetGenericTypeDefinition() == typeof(INotificationHandler<>) ||
-                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
-                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
+                                                                                      (i.GetGenericTypeDefinition() ==
+                                                                                       typeof(INotificationHandler<>) ||
+                                                                                       i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
+                                                                                       i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
 
                 foreach (Type type in types)
                 {
@@ -52,6 +54,13 @@ namespace Patterns.Mediator.Implementation
                         else if (genericType == typeof(IRequestHandler<,>) || genericType == typeof(IRequestHandler<>))
                         {
                             Type requestType = genericArguments[0];
+                            if (m_requestHandlerTypes.ContainsKey(requestType))
+                            {
+                                Debug.LogError(
+                                    $"Request handler {m_requestHandlerTypes[requestType]} for type {requestType} already defined, ignoring {type}");
+                                continue;
+                            }
+
                             m_requestHandlerTypes[requestType] = type;
                         }
                     }
@@ -88,6 +97,7 @@ namespace Patterns.Mediator.Implementation
             }
 
             object handlerInstance = GetOrCreateHandlerInstance(handlerType);
+
             return (TResponse)wrapperInstance.Handle(request, handlerInstance);
         }
 

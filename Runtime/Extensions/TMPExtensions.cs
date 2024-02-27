@@ -84,10 +84,10 @@ namespace Extensions
             return null;
         }
 
-        public static void AnimateTextReveal(this TMP_Text tmp, string text, float perCharDelay = 0.01f,
+        public static Coroutine AnimateTextReveal(this TMP_Text tmp, string text, float perCharDelay = 0.01f,
             Action endAction = null)
         {
-            tmp.StartCoroutine(IEAnimatedTextReveal(tmp, text, perCharDelay, endAction));
+            return tmp.StartCoroutine(IEAnimatedTextReveal(tmp, text, perCharDelay, endAction));
         }
 
         public static IEnumerator IEAnimatedTextReveal(TMP_Text tmp, string text, float perCharDelay = 0.01f,

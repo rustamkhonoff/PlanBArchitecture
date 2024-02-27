@@ -1,4 +1,4 @@
-namespace Patterns.Mediator.Publisher
+namespace Mediator
 {
     public interface INotificationHandler<in TNotification> where TNotification : INotification
     {

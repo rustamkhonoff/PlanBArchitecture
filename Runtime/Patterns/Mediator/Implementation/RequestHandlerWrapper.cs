@@ -1,13 +1,11 @@
-using Patterns.Mediator.Sender;
-
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
-    public abstract class RequestHandlerWrapper<TResponse> : RequestHandlerBase
+    internal abstract class RequestHandlerWrapper<TResponse> : RequestHandlerBase
     {
         public abstract TResponse Handle(IRequest<TResponse> request, object handler);
     }
 
-    public abstract class RequestHandlerWrapper : RequestHandlerBase
+    internal abstract class RequestHandlerWrapper : RequestHandlerBase
     {
         public abstract Unit Handle(IRequest request, object handler);
     }

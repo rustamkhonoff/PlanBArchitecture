@@ -1,4 +1,4 @@
-namespace Patterns.Mediator.Sender
+namespace Mediator
 {
     public interface IRequestHandler<in TRequest, out TResponse> where TRequest : IRequest<TResponse>
     {

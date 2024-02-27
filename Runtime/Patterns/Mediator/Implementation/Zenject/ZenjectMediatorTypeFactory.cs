@@ -1,11 +1,10 @@
 #if ZENJECT
 using System;
-using Patterns.Mediator.Interfaces;
 using Zenject;
 
-namespace Patterns.Mediator.Implementation.Zenject
+namespace Mediator
 {
-    public sealed class ZenjectMediatorTypeFactory : IMediatorTypeFactory
+    internal sealed class ZenjectMediatorTypeFactory : IMediatorTypeFactory
     {
         private readonly DiContainer m_diContainer;
 

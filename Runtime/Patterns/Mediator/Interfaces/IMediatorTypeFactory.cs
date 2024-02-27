@@ -1,6 +1,6 @@
 using System;
 
-namespace Patterns.Mediator.Interfaces
+namespace Mediator
 {
     public interface IMediatorTypeFactory
     {

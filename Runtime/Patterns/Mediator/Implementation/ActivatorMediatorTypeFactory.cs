@@ -1,9 +1,8 @@
 using System;
-using Patterns.Mediator.Interfaces;
 
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
-    public sealed class ActivatorMediatorTypeFactory : IMediatorTypeFactory
+    internal sealed class ActivatorMediatorTypeFactory : IMediatorTypeFactory
     {
         public object CreateInstanceFor(Type type)
         {

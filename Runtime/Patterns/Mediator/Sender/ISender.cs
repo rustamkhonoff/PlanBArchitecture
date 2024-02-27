@@ -1,4 +1,4 @@
-namespace Patterns.Mediator.Sender
+namespace Mediator
 {
     public interface ISender
     {

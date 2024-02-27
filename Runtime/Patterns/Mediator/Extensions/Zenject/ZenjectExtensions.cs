@@ -1,20 +1,18 @@
 #if ZENJECT
 using System;
 using System.Linq;
-using Patterns.Mediator.Implementation.Zenject;
-using Patterns.Mediator.Interfaces;
 using Zenject;
 
-namespace Patterns.Mediator.Extensions.Zenject
+namespace Mediator.Extensions.Zenject
 {
     public static class ZenjectExtensions
     {
         public static void AddMediator(this DiContainer diContainer)
         {
             diContainer.Bind<IMediator>()
-                .To<Implementation.Mediator>()
+                .To<Mediator>()
                 .AsSingle()
-                .WithArguments(typeof(Implementation.Mediator).Assembly)
+                .WithArguments(typeof(Mediator).Assembly)
                 .NonLazy();
 
             diContainer.Bind<IMediatorTypeFactory>()
@@ -25,7 +23,7 @@ namespace Patterns.Mediator.Extensions.Zenject
         public static void AddMediator(this DiContainer diContainer, params Type[] types)
         {
             diContainer.Bind<IMediator>()
-                .To<Implementation.Mediator>()
+                .To<Mediator>()
                 .AsSingle()
                 .WithArguments(types.Select(a => a.Assembly).ToArray())
                 .NonLazy();

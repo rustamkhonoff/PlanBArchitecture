@@ -1,6 +1,6 @@
 using System;
 
-namespace Patterns.EventBus.Interfaces
+namespace EventBus.Interfaces
 {
     public interface IEventBus
     {

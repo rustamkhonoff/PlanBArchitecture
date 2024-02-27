@@ -1,4 +1,4 @@
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
     public struct Unit
     {

@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Patterns.Mediator.Interfaces;
-using Patterns.Mediator.Publisher;
-using Patterns.Mediator.Sender;
 using UnityEngine;
 
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
-    public class Mediator : IMediator
+    internal class Mediator : IMediator
     {
         private readonly IMediatorTypeFactory m_typeFactory;
         private readonly Dictionary<Type, List<Type>> m_notificationHandlerTypes;
@@ -28,10 +25,10 @@ namespace Patterns.Mediator.Implementation
             foreach (Assembly assembly in assemblies)
             {
                 var types = assembly.GetTypes().Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
-                                                                                      (i.GetGenericTypeDefinition() ==
-                                                                                       typeof(INotificationHandler<>) ||
-                                                                                       i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
-                                                                                       i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
+                    (i.GetGenericTypeDefinition() ==
+                     typeof(INotificationHandler<>) ||
+                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
+                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
 
                 foreach (Type type in types)
                 {

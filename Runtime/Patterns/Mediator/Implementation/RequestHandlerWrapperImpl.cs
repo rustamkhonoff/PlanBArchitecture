@@ -1,8 +1,6 @@
-using Patterns.Mediator.Sender;
-
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
-    public class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse>
+    internal class RequestHandlerWrapperImpl<TRequest, TResponse> : RequestHandlerWrapper<TResponse>
         where TRequest : IRequest<TResponse>
     {
         public override TResponse Handle(IRequest<TResponse> request, object handler)
@@ -16,7 +14,7 @@ namespace Patterns.Mediator.Implementation
         }
     }
 
-    public class RequestHandlerWrapperImpl<TRequest> : RequestHandlerWrapper where TRequest : IRequest
+    internal class RequestHandlerWrapperImpl<TRequest> : RequestHandlerWrapper where TRequest : IRequest
     {
         public override object Handle(object request, object handler)
         {

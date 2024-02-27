@@ -1,8 +1,8 @@
 #if ZENJECT
-using Patterns.EventBus.Interfaces;
+using EventBus.Interfaces;
 using Zenject;
 
-namespace Patterns.EventBus.Extensions.Zenject
+namespace EventBus.Extensions.Zenject
 {
     public static class ZenjectExtensions
     {

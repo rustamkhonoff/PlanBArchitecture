@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Patterns.EventBus.Interfaces;
+using EventBus.Interfaces;
 using UnityEngine;
 
-namespace Patterns.EventBus.Implementation
+namespace EventBus.Implementation
 {
     internal class EventBus : IEventBus
     {

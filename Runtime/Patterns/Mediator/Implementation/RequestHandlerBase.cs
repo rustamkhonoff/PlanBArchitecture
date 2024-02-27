@@ -1,6 +1,6 @@
-namespace Patterns.Mediator.Implementation
+namespace Mediator
 {
-    public abstract class RequestHandlerBase
+    internal abstract class RequestHandlerBase
     {
         public abstract object Handle(object request, object handler);
     }

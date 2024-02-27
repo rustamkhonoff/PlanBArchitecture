@@ -7,7 +7,7 @@ namespace Services.UI.Core
 {
     internal class UIRoot : MonoBehaviour
     {
-        [SerializeField] private Transform _rootTransform;
+        [SerializeField] private RectTransform _rootTransform;
 
         private void Awake()
         {
@@ -16,9 +16,9 @@ namespace Services.UI.Core
 
         private void Reset()
         {
-            _rootTransform = transform;
+            _rootTransform = GetComponent<RectTransform>();
         }
 
-        public Transform RootTransform => transform;
+        public Transform RootTransform => _rootTransform;
     }
 }

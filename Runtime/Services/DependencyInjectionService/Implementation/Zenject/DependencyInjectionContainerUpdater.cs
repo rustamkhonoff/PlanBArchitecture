@@ -1,4 +1,5 @@
 ﻿#if ZENJECT
+using DependencyInjectionService;
 using Zenject;
 
 

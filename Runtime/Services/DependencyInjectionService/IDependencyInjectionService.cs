@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Services.DependencyInjectionService
+namespace DependencyInjectionService
 {
     public interface IDependencyInjectionService
     {

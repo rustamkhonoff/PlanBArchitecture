@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Services.DependencyInjectionService;
+using DependencyInjectionService;
 using Services.UI.Core;
 using Services.UI.Interfaces;
 using Services.UI.StaticData;

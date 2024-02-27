@@ -1,5 +1,6 @@
 #if ZENJECT
 using System;
+using DependencyInjectionService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;

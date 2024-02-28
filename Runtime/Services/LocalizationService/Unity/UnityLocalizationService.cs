@@ -1,23 +1,24 @@
 using System;
 using System.Runtime.CompilerServices;
-using Services.LocalizationService.Runtime;
+using LocalizationService.RuntimeLocalization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 
 [assembly: InternalsVisibleTo("LocalizationService.Unity.Zenject")]
 
-namespace Services.LocalizationService.Unity
+namespace LocalizationService.Unity
 {
-    internal class UnityLocalizationService : ILocalizationService, IDisposable
+    internal class UnityLocalizationService : ILocalizationService
     {
         private const char SplitChar = ';';
         private const string ErrorPlaceholder = "No translation";
+        private readonly ILocalizationChangeNotifier m_notifier;
 
-
-        public UnityLocalizationService()
+        public UnityLocalizationService(ILocalizationChangeNotifier localizationChangeNotifier)
         {
-            RuntimeLocalizationHelper.Construct(this, new UnityLocalizationChangeNotifier());
-            RuntimeLocalizationHelper.Initialize();
+            m_notifier = localizationChangeNotifier;
+            m_notifier.Initialize();
         }
 
         public string GetString(string key, string tableName = "Default Localization Table", params object[] arguments)
@@ -37,7 +38,17 @@ namespace Services.LocalizationService.Unity
             return ErrorPlaceholder;
         }
 
-        private string Internal_GetString(string key, string table, params object[] arguments)
+        public IRuntimeLocalizedText ConvertToUnityRuntimeLocalizedTMP(TMP_Text text, string key,
+            string table = "Base String Table", Func<object[]> argumentsFunc = null, string format = "{0}")
+        {
+            RuntimeLocalizedTMP component = text.gameObject.AddComponent<RuntimeLocalizedTMP>();
+            component.Setup(text, key, table, format, argumentsFunc);
+            component.Initialize(this, m_notifier);
+            return component;
+        }
+
+
+        private static string Internal_GetString(string key, string table, params object[] arguments)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -47,11 +58,6 @@ namespace Services.LocalizationService.Unity
 
             string found = LocalizationSettings.StringDatabase.GetLocalizedString(table, key, arguments);
             return found;
-        }
-
-        public void Dispose()
-        {
-            RuntimeLocalizationHelper.Dispose();
         }
     }
 }

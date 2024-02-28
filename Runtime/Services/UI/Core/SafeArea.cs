@@ -1,20 +1,20 @@
 using UnityEngine;
 
-namespace Services.UI.Core
+namespace UI
 {
-    public class SafeArea : MonoBehaviour
+    internal class SafeArea : MonoBehaviour
     {
-        private Rect lastSafeArea;
-        private RectTransform parentRectTransform;
+        private Rect m_lastSafeArea;
+        private RectTransform m_parentRectTransform;
 
         private void Start()
         {
-            parentRectTransform = this.GetComponent<RectTransform>();
+            m_parentRectTransform = this.GetComponent<RectTransform>();
         }
 
         private void Update()
         {
-            if (lastSafeArea != Screen.safeArea)
+            if (m_lastSafeArea != Screen.safeArea)
             {
                 ApplySafeArea();
             }
@@ -24,18 +24,18 @@ namespace Services.UI.Core
         {
             Rect safeAreaRect = Screen.safeArea;
 
-            float scaleRatio = parentRectTransform.rect.width / Screen.width;
+            float scaleRatio = m_parentRectTransform.rect.width / Screen.width;
 
-            var left = safeAreaRect.xMin * scaleRatio;
-            var right = -(Screen.width - safeAreaRect.xMax) * scaleRatio;
-            var top = -(Screen.height - safeAreaRect.yMax) * scaleRatio;
-            var bottom = safeAreaRect.yMin * scaleRatio;
+            float left = safeAreaRect.xMin * scaleRatio;
+            float right = -(Screen.width - safeAreaRect.xMax) * scaleRatio;
+            float top = -(Screen.height - safeAreaRect.yMax) * scaleRatio;
+            float bottom = safeAreaRect.yMin * scaleRatio;
 
             RectTransform rectTransform = GetComponent<RectTransform>();
             rectTransform.offsetMin = new Vector2(left, bottom);
             rectTransform.offsetMax = new Vector2(right, top);
 
-            lastSafeArea = Screen.safeArea;
+            m_lastSafeArea = Screen.safeArea;
         }
     }
 }

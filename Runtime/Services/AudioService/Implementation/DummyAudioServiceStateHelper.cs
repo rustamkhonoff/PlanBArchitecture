@@ -1,8 +1,8 @@
 using System;
 
-namespace Services.AudioService.Implementation
+namespace AudioService.Implementation
 {
-    public class DummyAudioServiceStateHelper : IAudioServiceStateHelper
+    internal class DummyAudioServiceStateHelper : IAudioServiceStateHelper
     {
         public event Action<bool> BackgroundStateChanged;
         public event Action<bool> SoundStateChanged;

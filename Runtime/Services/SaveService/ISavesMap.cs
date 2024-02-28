@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Services.SaveService
+namespace SaveService
 {
     public interface ISavesMap
     {

@@ -1,8 +1,7 @@
-﻿using Services.AudioService.Datas;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 
-namespace Services.AudioService
+namespace AudioService
 {
     public interface IAudioService
     {

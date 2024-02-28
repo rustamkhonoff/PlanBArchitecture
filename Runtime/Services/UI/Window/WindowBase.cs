@@ -1,6 +1,4 @@
-using Services.UI.Core;
-
-namespace Services.UI.Window
+namespace UI
 {
     public abstract class WindowBase : UIElement
     {

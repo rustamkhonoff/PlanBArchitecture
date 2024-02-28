@@ -1,6 +1,6 @@
 using System;
 
-namespace Services.AudioService
+namespace AudioService
 {
     public interface IAudioServiceStateHelper
     {

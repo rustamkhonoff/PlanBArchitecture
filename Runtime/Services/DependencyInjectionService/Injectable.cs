@@ -7,14 +7,18 @@ namespace DependencyInjectionService
     public class Injectable :
 #if ZENJECT
         Zenject.InjectAttribute
+#else
+    Attribute
 #endif
     {
     }
-    
+
     //For those who somehow want to keep injecting dependencies into anything
     public class InjectableAny :
 #if ZENJECT
         Zenject.InjectAttribute
+#else
+    Attribute
 #endif
     {
     }

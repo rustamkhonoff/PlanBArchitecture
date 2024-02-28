@@ -1,9 +1,9 @@
 #region ZENJECT
 
-using Services.SaveService.Implementations;
+using SaveService.Implementations;
 using Zenject;
 
-namespace Services.SaveService.Extensions.Zenject
+namespace SaveService.Extensions.Zenject
 {
     public static class ZenjectExtensions
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Services.AudioService.Datas
+namespace AudioService
 {
     [Serializable]
     public class AudioData

@@ -2,29 +2,20 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace Services.LocalizationService.Runtime
+namespace LocalizationService.RuntimeLocalization
 {
-    public class RuntimeLocalizedTMP : MonoBehaviour, IRuntimeLocalizedTMP
+    public class RuntimeLocalizedTMP : MonoBehaviour, IRuntimeLocalizedText
     {
         private TMP_Text m_text;
         private string m_key;
         private string m_table;
         private string m_format;
         private Func<object[]> m_argumentsFunc;
+        private ILocalizationChangeNotifier m_notifier;
+        private ILocalizationService m_localizationService;
 
-        public static RuntimeLocalizedTMP Convert(TMP_Text text,
-            string key,
-            string table = "Base String Table",
-            Func<object[]> argumentsFunc = null,
-            string format = "{0}")
-        {
-            RuntimeLocalizedTMP runtimeText = text.gameObject.AddComponent<RuntimeLocalizedTMP>();
-            runtimeText.Setup(text, key, table, format, argumentsFunc);
-            runtimeText.Initialize();
-            return runtimeText;
-        }
 
-        private void Setup(TMP_Text text, string key, string table, string format,
+        internal void Setup(TMP_Text text, string key, string table, string format,
             Func<object[]> argumentsFunc)
         {
             m_text = text;
@@ -34,9 +25,11 @@ namespace Services.LocalizationService.Runtime
             m_format = format;
         }
 
-        private void Initialize()
+        internal void Initialize(ILocalizationService localizationService, ILocalizationChangeNotifier notifier)
         {
-            Notifier.Changed += UpdateText;
+            m_localizationService = localizationService;
+            m_notifier = notifier;
+            m_notifier.Changed += UpdateText;
 
             UpdateText();
         }
@@ -45,8 +38,8 @@ namespace Services.LocalizationService.Runtime
 
         public void UpdateText()
         {
-            if (LocalizationService != null)
-                m_text.SetText(string.Format(m_format, LocalizationService.GetString(m_key, m_table, m_argumentsFunc?.Invoke())));
+            m_text.SetText(string.Format(m_format,
+                m_localizationService.GetString(m_key, m_table, m_argumentsFunc?.Invoke())));
         }
 
 
@@ -82,10 +75,7 @@ namespace Services.LocalizationService.Runtime
 
         private void OnDestroy()
         {
-            Notifier.Changed -= UpdateText;
+            m_notifier.Changed -= UpdateText;
         }
-
-        private static ILocalizationService LocalizationService => RuntimeLocalizationHelper.LocalizationService;
-        private static ILocalizationChangeNotifier Notifier => RuntimeLocalizationHelper.Notifier;
     }
 }

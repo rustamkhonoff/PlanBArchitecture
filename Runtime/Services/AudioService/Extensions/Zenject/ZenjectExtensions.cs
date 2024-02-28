@@ -1,9 +1,9 @@
 #if ZENJECT
-using Services.AudioService.Implementation;
+using AudioService.Implementation;
 using UnityEngine;
 using Zenject;
 
-namespace Services.AudioService.Extensions.Zenject
+namespace AudioService.Extensions.Zenject
 {
     public static class ZenjectExtensions
     {
@@ -21,7 +21,7 @@ namespace Services.AudioService.Extensions.Zenject
 
             diContainer
                 .Bind<IAudioService>()
-                .To<Implementation.AudioService>()
+                .To<global::AudioService.Implementation.AudioService>()
                 .AsSingle()
                 .WithArguments(Resources.Load("StaticData/Audio/AudioServiceStaticData"))
                 .NonLazy();

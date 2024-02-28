@@ -2,20 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DependencyInjectionService;
-using Services.UI.Core;
-using Services.UI.Interfaces;
-using Services.UI.StaticData;
-using Services.UI.Window;
+using UI.StaticData;
 using UnityEngine;
 
-namespace Services.UI.Extensions.Zenject.Implementation
+namespace UI.Implementation
 {
-    internal class UIService : IUIService
+    internal class UIService : IUIService, IBootable
     {
         private readonly IDependencyInjectionService m_dependencyInjectionService;
-        private readonly Dictionary<Type, WindowBase> m_cachedWindows;
-        private readonly Dictionary<Type, WindowBase> m_cachedModelWindows;
-        private readonly List<WindowBase> m_activeWindows;
+
+        //All created and existing in current window instances
+        private readonly List<WindowBase> m_currentCreatedWindows;
+
+        private readonly Dictionary<Type, WindowBase> m_cachedModelWindowsTypes;
+        private readonly Dictionary<Type, WindowBase> m_cachedWindowsTypes;
+
         private readonly UIStaticData m_uiStaticData;
 
         private UIRoot m_uiRoot;
@@ -27,49 +28,54 @@ namespace Services.UI.Extensions.Zenject.Implementation
             if (m_uiStaticData == null)
                 throw new NullReferenceException(nameof(UIStaticData));
 
-            m_cachedModelWindows = new Dictionary<Type, WindowBase>();
-            m_cachedWindows = new Dictionary<Type, WindowBase>();
+            m_cachedModelWindowsTypes = new Dictionary<Type, WindowBase>();
+            m_cachedWindowsTypes = new Dictionary<Type, WindowBase>();
 
             foreach (WindowBase window in m_uiStaticData.Windows)
             {
                 Type type = window.GetType();
                 if (IsModelWindow(type, out Type modelType))
                 {
-                    if (!m_cachedModelWindows.TryAdd(modelType, window))
+                    if (!m_cachedModelWindowsTypes.TryAdd(modelType, window))
                         Debug.LogWarning($"There is already window for model {modelType}");
                 }
                 else
                 {
-                    if (!m_cachedWindows.TryAdd(type, window))
+                    if (!m_cachedWindowsTypes.TryAdd(type, window))
                         Debug.LogWarning($"There is already window of type {type}");
                 }
             }
 
-            m_activeWindows = new List<WindowBase>();
-
-            Initialize();
+            m_currentCreatedWindows = new List<WindowBase>();
         }
 
+        public void Boot()
+        {
+            CheckForUIRoot();
+        }
 
         public void Initialize()
         {
-            CreateUIRoot();
         }
+
 
         #region Create
 
+        ///Creates new instance of Window
+        /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
         public TWindow CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window.Window
+            where TWindow : Window
         {
-            CreateUIRoot();
+            CheckForUIRoot();
 
-            Window.Window prefab = (Window.Window)m_cachedWindows[typeof(TWindow)];
+            Window prefab = (Window)m_cachedWindowsTypes[typeof(TWindow)];
             if (prefab is null)
-                throw new InvalidCastException();
+                throw new ArgumentNullException($"There is no Window of type {typeof(TWindow)}");
             TWindow instance =
                 m_dependencyInjectionService.InstantiatePrefabForComponent(prefab, m_uiRoot.RootTransform) as TWindow;
             if (instance == null)
-                throw new NullReferenceException();
+                throw new NullReferenceException($"Error while instantiating Window of type {typeof(TWindow)}")
+                    ;
             instance.Initialize();
             instance.Setup();
             instance.Show();
@@ -78,27 +84,24 @@ namespace Services.UI.Extensions.Zenject.Implementation
             if (onlyOneInstance && TryGetActiveWindows(out IList<WindowBase> foundInstances, typeof(WindowBase)))
                 DestroyActiveWindows(foundInstances);
 
-            m_activeWindows.Add(instance);
+            m_currentCreatedWindows.Add(instance);
             return instance;
         }
 
-        public ModelWindow<TModel> CreateWindowOfType<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
-            where TWindow : ModelWindow<TModel>
-        {
-            return CreateWindowForModel(model, onlyOneInstance);
-        }
-
+        ///Creates new instance of Model Window
+        /// <param name="model">Required model type for window</param>
+        /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
         public ModelWindow<TModel> CreateWindowForModel<TModel>(TModel model, bool onlyOneInstance = true)
         {
-            CreateUIRoot();
+            CheckForUIRoot();
 
-            ModelWindow<TModel> prefab = (ModelWindow<TModel>)m_cachedModelWindows[typeof(TModel)];
+            ModelWindow<TModel> prefab = (ModelWindow<TModel>)m_cachedModelWindowsTypes[typeof(TModel)];
             if (prefab is null)
-                throw new InvalidCastException();
+                throw new ArgumentNullException($"There is no Window for Model with type {model.GetType()}");
             ModelWindow<TModel> instance =
                 m_dependencyInjectionService.InstantiatePrefabForComponent(prefab, m_uiRoot.RootTransform);
             if (instance == null)
-                throw new NullReferenceException();
+                throw new NullReferenceException($"Error while instantiating ModelWindow for type {model.GetType()}");
             instance.Initialize();
             instance.Setup(model);
             instance.Show();
@@ -107,25 +110,59 @@ namespace Services.UI.Extensions.Zenject.Implementation
             if (onlyOneInstance && TryGetActiveWindows(out IList<WindowBase> foundInstances, instance.GetType()))
                 DestroyActiveWindows(foundInstances);
 
-            m_activeWindows.Add(instance);
+            m_currentCreatedWindows.Add(instance);
             return instance;
+        }
+
+        ///Creates new instance of Model Window
+        /// <param name="model">Required model type for window</param>
+        /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
+        public ModelWindow<TModel> CreateWindowOfType<TWindow, TModel>(TModel model, bool onlyOneInstance = true)
+            where TWindow : ModelWindow<TModel>
+        {
+            return CreateWindowForModel(model, onlyOneInstance);
         }
 
         #endregion
 
         #region Active Windows Logic
 
+        public IList<WindowBase> GetActiveWindowsOfType<TWindow>() where TWindow : WindowBase
+        {
+            TryGetActiveWindows(out IList<WindowBase> instances, typeof(TWindow));
+            return instances;
+        }
+
+        public IList<WindowBase> GetActiveWindowsForType<TWindow, TModel>() where TWindow : ModelWindow<TModel>
+        {
+            TryGetActiveWindows(out IList<WindowBase> instances, typeof(ModelWindow<TModel>));
+            return instances;
+        }
+
         public bool IsWindowActive<TWindow>() where TWindow : WindowBase
-            => m_activeWindows.Exists(a => a.GetType() == typeof(TWindow));
+            => m_currentCreatedWindows.Exists(a => a.GetType() == typeof(TWindow));
 
         public bool IsWindowForModelActive<TModel>() =>
-            m_activeWindows.Exists(a => a.GetType() == typeof(ModelWindow<TModel>));
+            m_currentCreatedWindows.Exists(a => a.GetType() == typeof(ModelWindow<TModel>));
 
         public bool TryGetActiveWindows(out IList<WindowBase> instances, Type type)
         {
-            instances = new List<WindowBase>();
-            instances = m_activeWindows.Where(a => a.GetType() == type).Select(a => a).ToList();
+            instances = m_currentCreatedWindows.Where(a => a.GetType() == type).Select(a => a).ToList();
             return true;
+        }
+
+        public void HideWindowsOfType<TWindow>() where TWindow : WindowBase
+        {
+            TryGetActiveWindows(out IList<WindowBase> windows, typeof(TWindow));
+            foreach (WindowBase windowBase in windows)
+                windowBase.Hide();
+        }
+
+        public void HideAndDestroyWindowsOfType<TWindow>() where TWindow : WindowBase
+        {
+            TryGetActiveWindows(out IList<WindowBase> windows, typeof(TWindow));
+            foreach (WindowBase windowBase in windows)
+                windowBase.HideAndDestroy();
         }
 
         #endregion
@@ -134,14 +171,14 @@ namespace Services.UI.Extensions.Zenject.Implementation
 
         public void DestroyWindowsOfModelType<TModel>()
         {
-            Type type = m_cachedModelWindows[typeof(TModel)].GetType();
+            Type type = m_cachedModelWindowsTypes[typeof(TModel)].GetType();
             TryGetActiveWindows(out IList<WindowBase> foundInstances, type);
             DestroyActiveWindows(foundInstances);
         }
 
         public void DestroyWindowOfType<TWindow>() where TWindow : WindowBase
         {
-            Type type = m_cachedWindows[typeof(TWindow)].GetType();
+            Type type = m_cachedWindowsTypes[typeof(TWindow)].GetType();
             TryGetActiveWindows(out IList<WindowBase> foundInstances, type);
             DestroyActiveWindows(foundInstances);
         }
@@ -152,19 +189,19 @@ namespace Services.UI.Extensions.Zenject.Implementation
             {
                 WindowBase window = windows[i];
                 window.HideAndDestroy();
-                m_activeWindows.Remove(window);
+                m_currentCreatedWindows.Remove(window);
             }
         }
 
         public void DestroyAll()
         {
-            for (int i = 0; i < m_activeWindows.Count; i++)
+            for (int i = 0; i < m_currentCreatedWindows.Count; i++)
             {
-                WindowBase window = m_activeWindows[i];
+                WindowBase window = m_currentCreatedWindows[i];
                 window.HideAndDestroy();
             }
 
-            m_activeWindows.Clear();
+            m_currentCreatedWindows.Clear();
         }
 
         #endregion
@@ -176,11 +213,11 @@ namespace Services.UI.Extensions.Zenject.Implementation
             if (windowBase == null)
                 return;
             windowBase.Dispose();
-            m_activeWindows.Remove(windowBase);
-            m_activeWindows.RemoveAll(a => ReferenceEquals(a, null));
+            m_currentCreatedWindows.Remove(windowBase);
+            m_currentCreatedWindows.RemoveAll(a => ReferenceEquals(a, null));
         }
 
-        private void CreateUIRoot()
+        private void CheckForUIRoot()
         {
             if (!m_uiRoot)
                 m_uiRoot = m_dependencyInjectionService.InstantiatePrefabForComponent(m_uiStaticData.RootPrefab);

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Services.AudioService.Datas;
 using UnityEngine;
 using UnityEngine.Audio;
 using Object = UnityEngine.Object;
 
 [assembly: InternalsVisibleTo("AudioService.Zenject")]
 
-namespace Services.AudioService.Implementation
+namespace AudioService.Implementation
 {
     internal class AudioService : IAudioService
     {

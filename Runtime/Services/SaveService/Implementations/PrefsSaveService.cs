@@ -5,7 +5,7 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("SaveService.Zenject")]
 
-namespace Services.SaveService.Implementations
+namespace SaveService.Implementations
 {
     internal class PrefsSaveService : ISaveService
     {
@@ -39,7 +39,9 @@ namespace Services.SaveService.Implementations
                     return Internal_TryCreateInstance(newInstanceFunc);
 
                 string textData = PlayerPrefs.GetString(key);
-                T data = customDataFormatter != null ? customDataFormatter(textData) : JsonUtility.FromJson<T>(textData);
+                T data = customDataFormatter != null
+                    ? customDataFormatter(textData)
+                    : JsonUtility.FromJson<T>(textData);
                 return data;
             }
 

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Services.AudioService.Extensions.Zenject.Addons
+namespace AudioService.Extensions.Zenject.Addons
 {
     [RequireComponent(typeof(Button))]
     public class AudioButton : AudioInvocator

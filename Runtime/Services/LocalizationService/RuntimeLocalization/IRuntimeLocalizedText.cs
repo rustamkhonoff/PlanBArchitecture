@@ -1,8 +1,8 @@
 using System;
 
-namespace Services.LocalizationService.Runtime
+namespace LocalizationService.RuntimeLocalization
 {
-    public interface IRuntimeLocalizedTMP
+    public interface IRuntimeLocalizedText
     {
         void UpdateText();
         void UpdateKey(string key, bool autoUpdate);

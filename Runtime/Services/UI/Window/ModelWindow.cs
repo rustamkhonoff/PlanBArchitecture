@@ -1,4 +1,4 @@
-namespace Services.UI.Window
+namespace UI
 {
     public abstract class ModelWindow<T> : WindowBase
     {

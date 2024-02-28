@@ -3,7 +3,7 @@ using Common.ReferenceValue;
 using UnityEngine;
 using Zenject;
 
-namespace Services.AudioService.Extensions.Zenject.Addons
+namespace AudioService.Extensions.Zenject.Addons
 {
     public class AudioInvocator : MonoBehaviour
     {

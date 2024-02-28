@@ -4,7 +4,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
-namespace Services.LocalizationService.Unity
+namespace LocalizationService.Unity.Addons
 {
     public class UnityLocaleSwap : MonoBehaviour
     {
@@ -21,16 +21,20 @@ namespace Services.LocalizationService.Unity
             m_currentLocaleIndex = m_localesProvider.Locales.IndexOf(LocalizationSettings.Instance.GetSelectedLocale());
             m_localesCount = m_localesProvider.Locales.Count;
 
-            _prevButton.onClick.AddListener(PrevLocale);
-            _nextButton.onClick.AddListener(NextLocale);
+            if (_prevButton != null)
+                _prevButton.onClick.AddListener(PrevLocale);
+            if (_nextButton != null)
+                _nextButton.onClick.AddListener(NextLocale);
 
             UpdateValue();
         }
 
         private void OnDestroy()
         {
-            _prevButton.onClick.RemoveListener(PrevLocale);
-            _nextButton.onClick.RemoveListener(NextLocale);
+            if (_prevButton != null)
+                _prevButton.onClick.RemoveListener(PrevLocale);
+            if (_nextButton != null)
+                _nextButton.onClick.RemoveListener(NextLocale);
         }
 
         private void NextLocale()
@@ -60,7 +64,8 @@ namespace Services.LocalizationService.Unity
 
         private void UpdateValue()
         {
-            _value.SetText(LocalizationSettings.Instance.GetSelectedLocale().LocaleName.Split("(")[0]);
+            if (_value != null)
+                _value.SetText(LocalizationSettings.Instance.GetSelectedLocale().LocaleName.Split("(")[0]);
         }
     }
 }

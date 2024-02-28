@@ -1,4 +1,8 @@
-namespace Services.LocalizationService
+using System;
+using LocalizationService.RuntimeLocalization;
+using TMPro;
+
+namespace LocalizationService
 {
     public interface ILocalizationService
     {
@@ -6,5 +10,8 @@ namespace Services.LocalizationService
 
         public string GetStringByIndex(string key, int index, string tableName = "Default Localization Table",
             params object[] arguments);
+
+        public IRuntimeLocalizedText ConvertToUnityRuntimeLocalizedTMP(TMP_Text text, string key,
+            string table = "Base String Table", Func<object[]> argumentsFunc = null, string format = "{0}");
     }
 }

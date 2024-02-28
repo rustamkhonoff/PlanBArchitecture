@@ -1,11 +1,11 @@
 using System;
-using Services.LocalizationService.Runtime;
+using LocalizationService.RuntimeLocalization;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
-namespace Services.LocalizationService.Unity
+namespace LocalizationService.Unity.RuntimeLocalization
 {
-    public class UnityLocalizationChangeNotifier : ILocalizationChangeNotifier
+    internal class UnityLocalizationChangeNotifier : ILocalizationChangeNotifier
     {
         public event Action Changed;
 

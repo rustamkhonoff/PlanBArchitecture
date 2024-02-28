@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Services.UI.Core
+namespace UI
 {
     public abstract class UIElement : MonoBehaviour
     {

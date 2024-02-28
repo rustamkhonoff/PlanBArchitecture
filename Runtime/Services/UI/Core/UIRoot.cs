@@ -3,7 +3,7 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]
 
-namespace Services.UI.Core
+namespace UI
 {
     internal class UIRoot : MonoBehaviour
     {

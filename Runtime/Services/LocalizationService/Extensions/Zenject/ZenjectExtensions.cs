@@ -1,13 +1,18 @@
 #if ZENJECT
-using Services.LocalizationService.Unity;
+using LocalizationService.Unity;
+using LocalizationService.Unity.RuntimeLocalization;
 using Zenject;
 
-namespace Services.LocalizationService.Implementations.Unity.Addons.Zenject
+namespace LocalizationService.Extensions.Zenject
 {
     public static class ZenjectExtensions
     {
         public static void AddUnityLocalizationService(this DiContainer diContainer)
         {
+            diContainer
+                .BindInterfacesAndSelfTo<UnityLocalizationChangeNotifier>()
+                .AsSingle();
+
             diContainer
                 .BindInterfacesAndSelfTo<UnityLocalizationService>()
                 .AsSingle()

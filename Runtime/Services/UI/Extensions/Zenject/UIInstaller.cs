@@ -1,5 +1,5 @@
 #if ZENJECT
-using Services.UI.Extensions.Zenject.Implementation;
+using UI.Implementation;
 using Zenject;
 
 namespace Services.UI.Extensions.Zenject

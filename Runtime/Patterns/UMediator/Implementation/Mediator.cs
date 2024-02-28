@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using UnityEngine;
+using UMediator.Interfaces;
+using UMediator.Internal;
+using UMediator.Publisher;
+using UMediator.Sender;
 
-namespace Mediator
+namespace UMediator.Implementation
 {
-    internal class Mediator : IMediator
+    public class Mediator : IMediator
     {
         private readonly IMediatorTypeFactory m_typeFactory;
         private readonly Dictionary<Type, List<Type>> m_notificationHandlerTypes;
@@ -14,55 +16,14 @@ namespace Mediator
         private readonly Dictionary<Type, object> m_handlerInstances;
         private readonly Dictionary<Type, RequestHandlerBase> m_requestHandlers;
 
-        public Mediator(IEnumerable<Assembly> assemblies, IMediatorTypeFactory typeFactory)
+        public Mediator(IUMediatrHandlersCollection handlersCollection, IMediatorTypeFactory mediatorTypeFactory)
         {
-            m_typeFactory = typeFactory;
-            m_notificationHandlerTypes = new Dictionary<Type, List<Type>>();
-            m_requestHandlerTypes = new Dictionary<Type, Type>();
             m_handlerInstances = new Dictionary<Type, object>();
             m_requestHandlers = new Dictionary<Type, RequestHandlerBase>();
 
-            foreach (Assembly assembly in assemblies)
-            {
-                var types = assembly.GetTypes().Where(t => t.GetInterfaces().Any(i => i.IsGenericType &&
-                    (i.GetGenericTypeDefinition() ==
-                     typeof(INotificationHandler<>) ||
-                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<>) ||
-                     i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))));
-
-                foreach (Type type in types)
-                {
-                    var handlerInterfaces = type.GetInterfaces().Where(i => i.IsGenericType);
-                    foreach (Type handlerInterface in handlerInterfaces)
-                    {
-                        Type genericType = handlerInterface.GetGenericTypeDefinition();
-                        var genericArguments = handlerInterface.GetGenericArguments();
-
-                        if (genericType == typeof(INotificationHandler<>))
-                        {
-                            Type notificationType = genericArguments[0];
-                            if (!m_notificationHandlerTypes.ContainsKey(notificationType))
-                            {
-                                m_notificationHandlerTypes[notificationType] = new List<Type>();
-                            }
-
-                            m_notificationHandlerTypes[notificationType].Add(type);
-                        }
-                        else if (genericType == typeof(IRequestHandler<,>) || genericType == typeof(IRequestHandler<>))
-                        {
-                            Type requestType = genericArguments[0];
-                            if (m_requestHandlerTypes.ContainsKey(requestType))
-                            {
-                                Debug.LogError(
-                                    $"Request handler {m_requestHandlerTypes[requestType]} for type {requestType} already defined, ignoring {type}");
-                                continue;
-                            }
-
-                            m_requestHandlerTypes[requestType] = type;
-                        }
-                    }
-                }
-            }
+            m_notificationHandlerTypes = handlersCollection.NotificationHandlerTypes;
+            m_requestHandlerTypes = handlersCollection.RequestHandlerTypes;
+            m_typeFactory = mediatorTypeFactory;
         }
 
         public void Publish<T>(T notification) where T : INotification

@@ -1,4 +1,4 @@
-namespace Mediator
+namespace UMediator.Sender
 {
     public interface ISender
     {

@@ -1,4 +1,6 @@
-namespace Mediator
+using UMediator.Sender;
+
+namespace UMediator.Implementation
 {
     internal abstract class RequestHandlerWrapper<TResponse> : RequestHandlerBase
     {

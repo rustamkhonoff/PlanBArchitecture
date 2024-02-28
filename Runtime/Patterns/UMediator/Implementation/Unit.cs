@@ -1,4 +1,4 @@
-namespace Mediator
+namespace UMediator.Implementation
 {
     public struct Unit
     {

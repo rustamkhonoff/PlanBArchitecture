@@ -1,4 +1,4 @@
-namespace Mediator
+namespace UMediator.Implementation
 {
     internal abstract class RequestHandlerBase
     {

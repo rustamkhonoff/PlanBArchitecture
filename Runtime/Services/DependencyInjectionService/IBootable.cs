@@ -1,8 +1,8 @@
 namespace DependencyInjectionService
 {
-    public interface IBootable :
+    public interface IBootable
 #if ZENJECT
-        Zenject.IInitializable
+        : Zenject.IInitializable
 #endif
     {
 #if ZENJECT

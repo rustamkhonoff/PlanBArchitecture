@@ -12,8 +12,17 @@
     "name": "Shokhrukhkhon Rustamkhonov",
     "email": "rustamkhonoff@gmail.com"
   },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp.unitask"
+      ]
+    }
+  ],
   "dependencies": {
     "com.unity.localization": "1.3.2",
-    "com.rustamkhonoff.umediator": "https://github.com/rustamkhonoff/UMediator.git"
+    "com.cysharp.unitask": "2.5.3"
   }
 }

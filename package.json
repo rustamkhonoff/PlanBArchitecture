@@ -13,6 +13,7 @@
     "email": "rustamkhonoff@gmail.com"
   },
   "dependencies": {
-    "com.unity.localization": "1.3.2"
+    "com.unity.localization": "1.3.2",
+    "com.rustamkhonoff.umediator": "https://github.com/rustamkhonoff/UMediator.git"
   }
 }

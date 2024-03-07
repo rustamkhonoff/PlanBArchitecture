@@ -13,5 +13,10 @@ namespace AudioService.Implementation
         public Func<bool> DebugEnabled => () => true;
         public Func<bool> SoundEnabled => () => true;
         public Func<bool> BackgroundEnabled => () => true;
+
+        public void Dispose()
+        {
+            //nothing
+        }
     }
 }

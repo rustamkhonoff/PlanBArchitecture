@@ -2,7 +2,7 @@ using System;
 
 namespace AudioService
 {
-    public interface IAudioServiceStateHelper
+    public interface IAudioServiceStateHelper : IDisposable
     {
         public event Action<bool> BackgroundStateChanged;
         public event Action<bool> SoundStateChanged;

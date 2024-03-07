@@ -18,20 +18,9 @@ namespace AudioService.Extensions.Zenject
         public static void AddSoundService<T>(this DiContainer diContainer, string staticDataPath = DefaultAudioStaticData)
             where T : IAudioServiceStateHelper
         {
-            if (typeof(IDisposable).IsAssignableFrom(typeof(IDisposable)))
-            {
-                diContainer
-                    .Bind(typeof(IAudioServiceStateHelper), typeof(IDisposable))
-                    .To<T>()
-                    .AsSingle();
-            }
-            else
-            {
-                diContainer
-                    .Bind(typeof(IAudioServiceStateHelper))
-                    .To<T>()
-                    .AsSingle();
-            }
+            diContainer
+                .BindInterfacesAndSelfTo(typeof(T))
+                .AsSingle();
 
             diContainer
                 .Bind<IAudioService>()

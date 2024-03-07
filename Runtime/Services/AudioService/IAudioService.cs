@@ -7,6 +7,7 @@ namespace AudioService
 {
     public interface IAudioService: IDisposable
     {
+        void Initialize();
         void Play(string key, float volume = 1f);
         void Play(AudioClip clip, float volume = 1f);
         void PlayWithSource(AudioSource source, string key, float volume = 1f);

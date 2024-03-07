@@ -25,17 +25,35 @@ namespace AudioService.Implementation
             m_stateHelper = stateHelper;
             m_audioServiceStaticData = audioServiceStaticData;
             m_soundDatas = CreateSoundDatasDictionary(m_audioServiceStaticData.AudioDatas);
-            CreateBaseAudioSources();
-            RegisterEvents();
-            InitializeHelperDatas();
         }
 
-        private void InitializeHelperDatas()
+        public void Initialize()
         {
-            Impl_SetSoundVolume(m_stateHelper.SoundVolume());
-            Impl_SetBackgroundVolume(m_stateHelper.BackgroundVolume());
-            SetSoundState(m_stateHelper.SoundEnabled());
-            SetBackgroundState(m_stateHelper.BackgroundEnabled());
+            ApplyHelperDatas();
+            RegisterEvents();
+
+            CreateBaseAudioSources();
+        }
+
+        private void ApplyHelperDatas()
+        {
+            if (DebugEnabled)
+            {
+                Debug.Log($"Background enabled: {BackgroundEnabled}, volume: {m_stateHelper.BackgroundVolume()}");
+                Debug.Log($"Sounds enabled: {SoundEnabled}, volume: {m_stateHelper.SoundVolume()}");
+            }
+
+            bool bgEnabled = BackgroundEnabled;
+            if (bgEnabled)
+                Impl_SetBackgroundVolume(m_stateHelper.BackgroundVolume());
+            else
+                SetBackgroundState(false);
+
+            bool soundEnabled = SoundEnabled;
+            if (soundEnabled)
+                Impl_SetSoundVolume(m_stateHelper.SoundVolume());
+            else
+                SetSoundState(false);
         }
 
         private void RegisterEvents()
@@ -70,6 +88,7 @@ namespace AudioService.Implementation
 
             m_baseSource.PlayOneShot(clip, volume);
         }
+
 
         public void Play(string key, float volume = 1)
         {
@@ -235,6 +254,9 @@ namespace AudioService.Implementation
                 return;
             }
 
+            if (DebugEnabled)
+                Debug.Log($"Setting Audio Mixer {audioMixerGroup.name} state {state}");
+
             audioMixerGroup.audioMixer.SetFloat(paramKey, state ? 0f : -80f);
         }
 
@@ -262,7 +284,11 @@ namespace AudioService.Implementation
                 return;
             }
 
+            if (DebugEnabled)
+                Debug.Log($"Setting Audio Mixer {audioMixerGroup.name} volume to {volume}");
+
             audioMixerGroup.audioMixer.SetFloat(paramKey, Mathf.Lerp(-80, 0, volume));
+            audioMixerGroup.audioMixer.GetFloat(paramKey, out float f);
         }
 
         public void SetBackgroundState(bool state)
@@ -281,7 +307,7 @@ namespace AudioService.Implementation
             SetSoundState(state);
         }
 
-        private void CreateBaseAudioSources()
+        private async void CreateBaseAudioSources()
         {
             if (m_baseSource == null)
             {

@@ -27,6 +27,15 @@ namespace AudioService.Implementation
             m_soundDatas = CreateSoundDatasDictionary(m_audioServiceStaticData.AudioDatas);
             CreateBaseAudioSources();
             RegisterEvents();
+            InitializeHelperDatas();
+        }
+
+        private void InitializeHelperDatas()
+        {
+            Impl_SetSoundVolume(m_stateHelper.SoundVolume());
+            Impl_SetBackgroundVolume(m_stateHelper.BackgroundVolume());
+            SetSoundState(m_stateHelper.SoundEnabled());
+            SetBackgroundState(m_stateHelper.BackgroundEnabled());
         }
 
         private void RegisterEvents()
@@ -310,12 +319,6 @@ namespace AudioService.Implementation
                 Debug.LogError(text);
         }
 
-        private const string DefaultSoundVolumeKey = "soundVolume";
-        private const string DefaultBackgroundVolumeKey = "bgVolume";
-        private bool DebugEnabled => m_stateHelper.DebugEnabled();
-        private bool SoundEnabled => m_stateHelper.SoundEnabled();
-        private bool BackgroundEnabled => m_stateHelper.BackgroundEnabled();
-
         public void Dispose()
         {
             m_stateHelper.SoundStateChanged -= SetSoundState;
@@ -323,5 +326,11 @@ namespace AudioService.Implementation
             m_stateHelper.BackgroundVolumeChanged -= Impl_SetBackgroundVolume;
             m_stateHelper.SoundVolumeChanged -= Impl_SetSoundVolume;
         }
+
+        private const string DefaultSoundVolumeKey = "soundVolume";
+        private const string DefaultBackgroundVolumeKey = "bgVolume";
+        private bool DebugEnabled => m_stateHelper.DebugEnabled();
+        private bool SoundEnabled => m_stateHelper.SoundEnabled();
+        private bool BackgroundEnabled => m_stateHelper.BackgroundEnabled();
     }
 }

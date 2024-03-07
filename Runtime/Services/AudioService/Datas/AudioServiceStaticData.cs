@@ -2,9 +2,9 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace AudioService
+namespace AudioService.Datas
 {
-    [CreateAssetMenu(menuName = "Project/Audio/Create Audio Holder", fileName = "AudioServiceStaticData", order = 0)]
+    [CreateAssetMenu(menuName = "Project/Audio/Create AudioService Static Data", fileName = "AudioServiceStaticData", order = 0)]
     internal class AudioServiceStaticData : ScriptableObject
     {
         [SerializeField] private AudioMixerGroup _soundGroup;

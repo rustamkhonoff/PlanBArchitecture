@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.3.4]
+### Fix
+- Sound Service fixes
+
 ## [1.3.1]
 ### Fix
 - Fixed Send Request in Mediator

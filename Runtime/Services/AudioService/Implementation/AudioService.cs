@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using AudioService.Datas;
 using UnityEngine;
 using UnityEngine.Audio;
 using Object = UnityEngine.Object;
@@ -25,15 +26,15 @@ namespace AudioService.Implementation
             m_audioServiceStaticData = audioServiceStaticData;
             m_soundDatas = CreateSoundDatasDictionary(m_audioServiceStaticData.AudioDatas);
             CreateBaseAudioSources();
-            RegisterEvents(stateHelper);
+            RegisterEvents();
         }
 
-        private void RegisterEvents(IAudioServiceStateHelper stateHelper)
+        private void RegisterEvents()
         {
-            stateHelper.SoundStateChanged += SetSoundState;
-            stateHelper.BackgroundStateChanged += SetBackgroundState;
-            stateHelper.BackgroundVolumeChanged += Impl_SetBackgroundVolume;
-            stateHelper.SoundVolumeChanged += Impl_SetSoundVolume;
+            m_stateHelper.SoundStateChanged += SetSoundState;
+            m_stateHelper.BackgroundStateChanged += SetBackgroundState;
+            m_stateHelper.BackgroundVolumeChanged += Impl_SetBackgroundVolume;
+            m_stateHelper.SoundVolumeChanged += Impl_SetSoundVolume;
         }
 
         private void Impl_SetBackgroundVolume(float obj)
@@ -224,6 +225,7 @@ namespace AudioService.Implementation
                 LogError("AudioMixerGroup is NULL");
                 return;
             }
+
             audioMixerGroup.audioMixer.SetFloat(paramKey, state ? 0f : -80f);
         }
 
@@ -313,5 +315,13 @@ namespace AudioService.Implementation
         private bool DebugEnabled => m_stateHelper.DebugEnabled();
         private bool SoundEnabled => m_stateHelper.SoundEnabled();
         private bool BackgroundEnabled => m_stateHelper.BackgroundEnabled();
+
+        public void Dispose()
+        {
+            m_stateHelper.SoundStateChanged -= SetSoundState;
+            m_stateHelper.BackgroundStateChanged -= SetBackgroundState;
+            m_stateHelper.BackgroundVolumeChanged -= Impl_SetBackgroundVolume;
+            m_stateHelper.SoundVolumeChanged -= Impl_SetSoundVolume;
+        }
     }
 }

@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using AudioService.Datas;
+using UnityEngine;
 using UnityEngine.Audio;
 
 namespace AudioService
 {
-    public interface IAudioService
+    public interface IAudioService: IDisposable
     {
         void Play(string key, float volume = 1f);
         void Play(AudioClip clip, float volume = 1f);

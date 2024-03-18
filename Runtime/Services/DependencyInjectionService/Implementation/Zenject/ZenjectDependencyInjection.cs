@@ -20,6 +20,7 @@ namespace DependencyInjectionService.Implementation.Zenject
 
         public void Initialize()
         {
+            TryUpdateDiContainer();
             SceneManager.activeSceneChanged += HandleSceneChange;
         }
 
@@ -27,6 +28,13 @@ namespace DependencyInjectionService.Implementation.Zenject
         {
             if (arg0 == arg1)
                 return;
+            if (m_logsEnabled)
+                Debug.Log("Start updating DiContainer after scene change");
+            TryUpdateDiContainer();
+        }
+
+        private void TryUpdateDiContainer()
+        {
             if (Object.FindObjectOfType<SceneContext>() is { } sceneContext)
                 Update(sceneContext.Container);
         }

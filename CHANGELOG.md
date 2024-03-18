@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.9]
+### New
+- Fixed DiService Container update
+- State machine state factory
+
 ## [1.3.8]
 ### New
 - Added FSM

@@ -3,21 +3,24 @@ using System.Linq;
 using System.Reflection;
 using DependencyInjectionService;
 using Extensions;
-using UnityEngine;
 
 namespace FSM
 {
+    public interface IStateFactory
+    {
+        public object CreateState(Type type);
+    }
+
     public sealed class StateMachine : ITick
     {
+        private readonly IStateFactory m_stateFactory;
         public event Action<StateBase, StateBase> StateChangedFromTo;
         public event Action<StateBase> StateChangedTo;
         private StateBase CurrentState { get; set; }
 
-        private readonly IDependencyInjectionService m_dependencyInjectionService;
-
-        public StateMachine(IDependencyInjectionService dependencyInjectionService, Type defaultState = null, object transfer = null)
+        public StateMachine(IStateFactory stateFactory, Type defaultState = null, object transfer = null)
         {
-            m_dependencyInjectionService = dependencyInjectionService;
+            m_stateFactory = stateFactory;
             if (defaultState == null)
                 return;
             if (transfer == null)
@@ -38,8 +41,8 @@ namespace FSM
                 return;
             CurrentState?.Exit();
 
-            State stateInstance = (State)m_dependencyInjectionService.Create(stateType);
-            stateInstance.Enter();
+            State stateInstance = m_stateFactory.CreateState(stateType) as State;
+            stateInstance?.Enter();
 
             OnStateChangedFromTo(CurrentState, stateInstance);
             OnStateChangedTo(CurrentState);
@@ -70,13 +73,13 @@ namespace FSM
 
             CurrentState?.Exit();
 
-            object stateInstance = m_dependencyInjectionService.Create(stateType);
+            object stateInstance = m_stateFactory.CreateState(stateType);
 
             MethodInfo method = stateType.GetMethod("Enter");
             if (method == null)
                 throw new InvalidCastException("There is no method with name Enter");
 
-            method?.Invoke(stateInstance, new[] { transfer });
+            method.Invoke(stateInstance, new[] { transfer });
 
             OnStateChangedFromTo(CurrentState, stateInstance as State);
             OnStateChangedTo(CurrentState);

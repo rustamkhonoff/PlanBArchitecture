@@ -1,5 +1,6 @@
 #if ZENJECT
 using System;
+using FSM.Implementations;
 using Zenject;
 
 namespace FSM.Extensions
@@ -9,6 +10,11 @@ namespace FSM.Extensions
         public static void AddGlobalStateMachine(this DiContainer diContainer, Type stateType = null, object transfer = null)
         {
             diContainer
+                .Bind<IStateFactory>()
+                .To<DiStateFactory>()
+                .AsSingle();
+
+            diContainer
                 .BindInterfacesAndSelfTo<StateMachine>()
                 .AsSingle()
                 .WithArguments(stateType, transfer);
@@ -16,19 +22,13 @@ namespace FSM.Extensions
 
         public static void AddGlobalStateMachine<TState>(this DiContainer diContainer) where TState : State
         {
-            diContainer
-                .BindInterfacesAndSelfTo<StateMachine>()
-                .AsSingle()
-                .WithArguments(typeof(TState));
+            AddGlobalStateMachine(diContainer, typeof(TState));
         }
 
         public static void AddGlobalStateMachine<TState, TTransfer>(this DiContainer diContainer, TTransfer transfer)
             where TState : TransferState<TTransfer>
         {
-            diContainer
-                .BindInterfacesAndSelfTo<StateMachine>()
-                .AsSingle()
-                .WithArguments(typeof(TState), transfer);
+            AddGlobalStateMachine(diContainer, typeof(TState), transfer);
         }
     }
 }

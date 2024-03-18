@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.8]
+### New
+- Added FSM
+- Added ITick interface
+
 ## [1.3.7]
 ### New
 - Added loging condition to DIService

@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DependencyInjectionService;
+using UI.Core;
+using UI.Interfaces;
 using UI.StaticData;
+using UI.Window;
 using UnityEngine;
 
 namespace UI.Implementation
@@ -54,28 +57,22 @@ namespace UI.Implementation
             CheckForUIRoot();
         }
 
-        public void Initialize()
-        {
-        }
-
-
         #region Create
 
         ///Creates new instance of Window
         /// <param name="onlyOneInstance">If true will find and destroy other instances of same window type</param>
         public TWindow CreateWindowOfType<TWindow>(bool onlyOneInstance = true)
-            where TWindow : Window
+            where TWindow : Window.Window
         {
             CheckForUIRoot();
 
-            Window prefab = (Window)m_cachedWindowsTypes[typeof(TWindow)];
+            Window.Window prefab = (Window.Window)m_cachedWindowsTypes[typeof(TWindow)];
             if (prefab is null)
                 throw new ArgumentNullException($"There is no Window of type {typeof(TWindow)}");
             TWindow instance =
                 m_dependencyInjectionService.InstantiatePrefabForComponent(prefab, m_uiRoot.RootTransform) as TWindow;
             if (instance == null)
-                throw new NullReferenceException($"Error while instantiating Window of type {typeof(TWindow)}")
-                    ;
+                throw new NullReferenceException($"Error while instantiating Window of type {typeof(TWindow)}");
             instance.Initialize();
             instance.Setup();
             instance.Show();

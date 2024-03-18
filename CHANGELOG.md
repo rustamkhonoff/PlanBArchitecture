@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.7]
+### New
+- Added loging condition to DIService
+- Added Pool pattern
+
 ## [1.3.4]
 ### Fix
 - Sound Service fixes

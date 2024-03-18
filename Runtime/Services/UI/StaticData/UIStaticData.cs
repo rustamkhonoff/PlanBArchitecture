@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UI.Core;
+using UI.Window;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("UI.Zenject")]
@@ -12,8 +14,7 @@ namespace UI.StaticData
         [SerializeField] private UIRoot _uiRootPrefab;
         [SerializeField] private List<WindowBase> _windows;
 
-        public IEnumerable<WindowBase> Windows => _windows;
-
         public UIRoot RootPrefab => _uiRootPrefab;
+        public IEnumerable<WindowBase> Windows => _windows;
     }
 }

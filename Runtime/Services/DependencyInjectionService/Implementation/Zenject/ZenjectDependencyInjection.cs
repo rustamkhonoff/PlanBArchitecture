@@ -1,20 +1,21 @@
 #if ZENJECT
 using System;
-using DependencyInjectionService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 using Object = UnityEngine.Object;
 
-namespace Services.DependencyInjectionService.Implementation.Zenject
+namespace DependencyInjectionService.Implementation.Zenject
 {
     internal class ZenjectDependencyInjection : IDependencyInjectionService, IInitializable, IDisposable
     {
         private DiContainer m_diContainer;
+        private readonly bool m_logsEnabled;
 
-        public ZenjectDependencyInjection(DiContainer diContainer)
+        public ZenjectDependencyInjection(DiContainer diContainer, bool logsEnabled = false)
         {
             m_diContainer = diContainer;
+            m_logsEnabled = logsEnabled;
         }
 
         public void Initialize()
@@ -32,7 +33,8 @@ namespace Services.DependencyInjectionService.Implementation.Zenject
 
         public void Dispose()
         {
-            Debug.Log("ZenjectDependencyInjection disposed");
+            if (m_logsEnabled)
+                Debug.Log("ZenjectDependencyInjection disposed");
             SceneManager.activeSceneChanged -= HandleSceneChange;
         }
 
@@ -75,7 +77,8 @@ namespace Services.DependencyInjectionService.Implementation.Zenject
 
         public void Update(object diContainer)
         {
-            Debug.Log("DiContainer [UPDATED]");
+            if (m_logsEnabled)
+                Debug.Log("DiContainer [UPDATED]");
             m_diContainer = diContainer as DiContainer;
         }
 

@@ -1,15 +1,16 @@
 #if ZENJECT
 using Zenject;
 
-namespace Services.DependencyInjectionService.Implementation.Zenject
+namespace DependencyInjectionService.Implementation.Zenject
 {
     public static class ZenjectExtensions
     {
-        public static void AddDependencyInjection(this DiContainer diContainer)
+        public static void AddDependencyInjection(this DiContainer diContainer, bool logsEnabled = false)
         {
             diContainer
                 .BindInterfacesAndSelfTo<ZenjectDependencyInjection>()
-                .AsSingle();
+                .AsSingle()
+                .WithArguments(logsEnabled);
         }
     }
 }

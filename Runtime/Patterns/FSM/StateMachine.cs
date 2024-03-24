@@ -6,29 +6,32 @@ using Extensions;
 
 namespace FSM
 {
-    public interface IStateFactory
+    public sealed class StateMachine : ITick, IBootable
     {
-        public object CreateState(Type type);
-    }
-
-    public sealed class StateMachine : ITick
-    {
-        private readonly IStateFactory m_stateFactory;
         public event Action<StateBase, StateBase> StateChangedFromTo;
         public event Action<StateBase> StateChangedTo;
+
+        private readonly IStateFactory m_stateFactory;
+        private readonly Type m_defaultState;
+        private readonly object m_transfer;
         private StateBase CurrentState { get; set; }
 
         public StateMachine(IStateFactory stateFactory, Type defaultState = null, object transfer = null)
         {
             m_stateFactory = stateFactory;
-            if (defaultState == null)
-                return;
-            if (transfer == null)
-                Enter(defaultState);
-            else
-                Enter(defaultState, transfer);
+            m_defaultState = defaultState;
+            m_transfer = transfer;
         }
 
+        public void Boot()
+        {
+            if (m_defaultState == null)
+                return;
+            if (m_transfer != null)
+                Enter(m_defaultState, m_transfer);
+            else
+                Enter(m_defaultState);
+        }
 
         public void Enter<TState>() where TState : State
         {
@@ -42,12 +45,13 @@ namespace FSM
             CurrentState?.Exit();
 
             State stateInstance = m_stateFactory.CreateState(stateType) as State;
-            stateInstance?.Enter();
 
             OnStateChangedFromTo(CurrentState, stateInstance);
             OnStateChangedTo(CurrentState);
 
             CurrentState = stateInstance;
+
+            stateInstance?.Enter();
         }
 
         public void Enter<TState, TTransfer>(TTransfer transfer) where TState : TransferState<TTransfer>
@@ -69,22 +73,22 @@ namespace FSM
 
             Type transferType = baseGenericType.GetGenericArguments().First();
             if (transfer.GetType() != transferType)
-                throw new InvalidCastException($"Given state transfer type is {transfer.GetType()}, expected {transferType}");
+                throw new InvalidCastException(
+                    $"Given state transfer type is {transfer.GetType()}, expected {transferType}");
 
             CurrentState?.Exit();
 
             object stateInstance = m_stateFactory.CreateState(stateType);
+            
+            OnStateChangedFromTo(CurrentState, stateInstance as State);
+            OnStateChangedTo(CurrentState);
 
+            CurrentState = stateInstance as State;
             MethodInfo method = stateType.GetMethod("Enter");
             if (method == null)
                 throw new InvalidCastException("There is no method with name Enter");
 
             method.Invoke(stateInstance, new[] { transfer });
-
-            OnStateChangedFromTo(CurrentState, stateInstance as State);
-            OnStateChangedTo(CurrentState);
-
-            CurrentState = stateInstance as State;
         }
 
         public void Tick()

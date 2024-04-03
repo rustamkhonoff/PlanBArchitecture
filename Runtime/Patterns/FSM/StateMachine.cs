@@ -10,11 +10,16 @@ namespace FSM
 {
     public class StateChangeConditionMap : IStateChangeConditionMap
     {
-        public Dictionary<(Type, Type), Func<bool>> Map { get; private set; }
+        public Dictionary<(Type, Type), Func<bool>> Map { get; }
 
         public StateChangeConditionMap(Dictionary<(Type, Type), Func<bool>> map)
         {
             Map = map;
+        }
+
+        public StateChangeConditionMap()
+        {
+            Map = new Dictionary<(Type, Type), Func<bool>>();
         }
 
         public void Add<TFromState, TToState>(Func<bool> condition) where TFromState : StateBase where TToState : StateBase

@@ -60,10 +60,10 @@ namespace FSM
         void AddConditionMap<TFromState, TToState>(Func<bool> condition) where TFromState : StateBase where TToState : StateBase;
         void RemoveConditionMap(Type from, Type to);
         void RemoveConditionMap<TFromState, TToState>() where TFromState : StateBase where TToState : StateBase;
-        void Enter<TState>() where TState : State;
-        void Enter(Type stateType);
-        void Enter<TState, TTransfer>(TTransfer transfer) where TState : TransferState<TTransfer>;
-        void Enter(Type stateType, object transfer);
+        bool Enter<TState>() where TState : State;
+        bool Enter(Type stateType);
+        bool Enter<TState, TTransfer>(TTransfer transfer) where TState : TransferState<TTransfer>;
+        bool Enter(Type stateType, object transfer);
     }
 
     public sealed class StateMachine : ITick, IBootable, IStateMachine
@@ -146,21 +146,22 @@ namespace FSM
                 Enter(m_defaultState);
         }
 
-        public void Enter<TState>() where TState : State
+        public bool Enter<TState>() where TState : State
         {
-            Enter(typeof(TState));
+            return Enter(typeof(TState));
         }
 
-        public void Enter(Type stateType)
+        public bool Enter(Type stateType)
         {
             if (!IsValidTransitionToState(stateType))
             {
                 Debug.Log($"Can't change state to {stateType}, condition returns False");
-                return;
+                return false;
             }
 
             if (!stateType.IsSubclassOf(typeof(State)))
-                return;
+                return false;
+
             StateBase lastState = CurrentState;
             CurrentState?.Exit();
 
@@ -172,19 +173,20 @@ namespace FSM
             OnStateChangedTo(CurrentState);
 
             stateInstance?.Enter();
+            return true;
         }
 
-        public void Enter<TState, TTransfer>(TTransfer transfer) where TState : TransferState<TTransfer>
+        public bool Enter<TState, TTransfer>(TTransfer transfer) where TState : TransferState<TTransfer>
         {
-            Enter(typeof(TState), transfer);
+            return Enter(typeof(TState), transfer);
         }
 
-        public void Enter(Type stateType, object transfer)
+        public bool Enter(Type stateType, object transfer)
         {
             if (!IsValidTransitionToState(stateType))
             {
                 Debug.Log($"Can't change state to {stateType}, condition returns False");
-                return;
+                return false;
             }
 
             if (!stateType.IsInheritsGenericClass(typeof(TransferState<>)))
@@ -211,7 +213,7 @@ namespace FSM
 
             MethodInfo method = stateType.GetMethod("Enter");
             if (method == null)
-                throw new InvalidCastException("There is no method with name Enter");
+                return false;
 
             CurrentState = stateInstanceAsType;
 
@@ -219,6 +221,7 @@ namespace FSM
             OnStateChangedTo(CurrentState);
 
             method.Invoke(stateInstance, new[] { transfer });
+            return true;
         }
 
         public void Tick()

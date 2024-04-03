@@ -24,7 +24,7 @@ namespace FSM
 
         public void Add<TFromState, TToState>(Func<bool> condition) where TFromState : StateBase where TToState : StateBase
         {
-            Add(typeof(TToState), typeof(TToState), condition);
+            Add(typeof(TFromState), typeof(TToState), condition);
         }
 
         public void Add(Type from, Type to, Func<bool> condition)

@@ -1,9 +1,14 @@
 # Changelog
 
+## [1.4.1]
+### New
+- Introduced IStateMachine interface
+- Added State Machine conditions to change States
+- Fixed State machine [Exit] Method
+
 ## [1.4.0]
 ### New
 - Fixed State machine [Exit] Method
-
 
 ## [1.3.9]
 ### New

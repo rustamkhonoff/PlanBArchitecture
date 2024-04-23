@@ -1,3 +1,5 @@
+#if LOCALIZATION_USE_UNITY
+
 using System;
 using System.Runtime.CompilerServices;
 using LocalizationService.RuntimeLocalization;
@@ -61,3 +63,5 @@ namespace LocalizationService.Unity
         }
     }
 }
+
+#endif

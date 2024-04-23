@@ -1,3 +1,5 @@
+#if LOCALIZATION_USE_UNITY
+
 using System;
 using LocalizationService.RuntimeLocalization;
 using UnityEngine.Localization;
@@ -25,3 +27,5 @@ namespace LocalizationService.Unity.RuntimeLocalization
         }
     }
 }
+
+#endif

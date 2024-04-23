@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.2]
+### Changes
+- Changes in Localization Service **[UnityLocalization]**, removed direct dependecy of _com.unity.localization_
+- UnityLocalizationService enables after installing _com.unity.localization_ package 
+
 ## [1.4.1]
 ### New
 - Introduced IStateMachine interface

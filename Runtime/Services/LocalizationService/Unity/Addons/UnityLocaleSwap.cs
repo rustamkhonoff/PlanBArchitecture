@@ -1,3 +1,5 @@
+#if LOCALIZATION_USE_UNITY
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -69,3 +71,5 @@ namespace LocalizationService.Unity.Addons
         }
     }
 }
+
+#endif

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.3]
+### New
+- Added IAssetProvider to work with Addressables
+- ZENJECT define will automatically added if detecs zenject package (only for git zenject package)
+
 ## [1.4.2]
 ### Changes
 - Changes in Localization Service **[UnityLocalization]**, removed direct dependecy of _com.unity.localization_

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4]
+### Changes
+- Removed TMPRuntimeLocalizedText from LocalizationService
+- Added RuntimeLocalizedTextSetAction as abstract way to set text
+### Migration
+- LocalizationService.ConvertToUnityRuntimeLocalizedTMP renamed to ConvertToRuntimeLocalizedText
+
 ## [1.4.3]
 ### New
 - Added IAssetProvider to work with Addressables

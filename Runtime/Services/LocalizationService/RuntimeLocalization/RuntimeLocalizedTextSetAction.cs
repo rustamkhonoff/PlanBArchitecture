@@ -1,28 +1,24 @@
 using System;
-using TMPro;
 using UnityEngine;
 
 namespace LocalizationService.RuntimeLocalization
 {
-    public class RuntimeLocalizedTMP : MonoBehaviour, IRuntimeLocalizedText
+    public delegate void PerformTextSet(string text);
+
+    public class RuntimeLocalizedTextSetAction : IRuntimeLocalizedText, IDisposable
     {
-        private TMP_Text m_text;
+        private PerformTextSet m_performTextSetAction;
         private string m_key;
         private string m_table;
         private string m_format;
         private Func<object[]> m_argumentsFunc;
+
         private ILocalizationChangeNotifier m_notifier;
         private ILocalizationService m_localizationService;
 
-
-        internal void Setup(TMP_Text text, string key, string table, string format,
-            Func<object[]> argumentsFunc)
+        internal void LinkTo(GameObject gameObject)
         {
-            m_text = text;
-            m_key = key;
-            m_table = table;
-            m_argumentsFunc = argumentsFunc;
-            m_format = format;
+            DestroyEvent.Create(gameObject, Dispose);
         }
 
         internal void Initialize(ILocalizationService localizationService, ILocalizationChangeNotifier notifier)
@@ -34,11 +30,21 @@ namespace LocalizationService.RuntimeLocalization
             UpdateText();
         }
 
+        internal void Setup(PerformTextSet performTextSetAction, string key, string table, string format,
+            Func<object[]> argumentsFunc)
+        {
+            m_performTextSetAction = performTextSetAction;
+            m_argumentsFunc = argumentsFunc;
+            m_format = format;
+            m_table = table;
+            m_key = key;
+        }
+
         #region Interface
 
         public void UpdateText()
         {
-            m_text.SetText(string.Format(m_format,
+            m_performTextSetAction.Invoke(string.Format(m_format,
                 m_localizationService.GetString(m_key, m_table, m_argumentsFunc?.Invoke())));
         }
 
@@ -73,7 +79,7 @@ namespace LocalizationService.RuntimeLocalization
 
         #endregion
 
-        private void OnDestroy()
+        public void Dispose()
         {
             m_notifier.Changed -= UpdateText;
         }

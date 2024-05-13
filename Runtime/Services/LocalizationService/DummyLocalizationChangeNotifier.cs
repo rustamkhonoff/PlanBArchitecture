@@ -14,6 +14,7 @@ namespace LocalizationService
 
         public void Initialize()
         {
+            Changed?.Invoke();
             //ignore
         }
     }

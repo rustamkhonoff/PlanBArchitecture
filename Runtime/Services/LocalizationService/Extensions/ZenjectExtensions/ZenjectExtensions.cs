@@ -4,8 +4,11 @@ namespace LocalizationService.Extensions.ZenjectExtensions
     public static class ZenjectExtensions
     {
 #if LOCALIZATION_USE_UNITY
-        public static void AddUnityLocalizationService(this Zenject.DiContainer diContainer)
+        public static void AddUnityLocalizationService(this Zenject.DiContainer diContainer,
+            LocalizationConfiguration localizationConfiguration = null)
         {
+            localizationConfiguration ??= LocalizationConfiguration.Default;
+
             diContainer
                 .BindInterfacesAndSelfTo<Unity.RuntimeLocalization.UnityLocalizationChangeNotifier>()
                 .AsSingle();
@@ -13,6 +16,7 @@ namespace LocalizationService.Extensions.ZenjectExtensions
             diContainer
                 .BindInterfacesAndSelfTo<Unity.UnityLocalizationService>()
                 .AsSingle()
+                .WithArguments(localizationConfiguration)
                 .NonLazy();
         }
 #endif

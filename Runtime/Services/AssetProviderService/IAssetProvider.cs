@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -10,6 +11,8 @@ namespace Services.AssetProviderService
     {
         Task<T> Load<T>(AssetReference assetReference) where T : class;
         Task<T> Load<T>(string key) where T : class;
+        Task<T> LoadAsComponent<T>(AssetReference assetReference) where T : Component;
+        Task<T> LoadAsComponent<T>(string key) where T : Component;
         void Release();
     }
 
@@ -29,6 +32,7 @@ namespace Services.AssetProviderService
             return await Load<T>(assetReference.AssetGUID);
         }
 
+
         public async Task<T> Load<T>(string key) where T : class
         {
             if (m_completedCache.TryGetValue(key, out AsyncOperationHandle completedHandler))
@@ -46,6 +50,18 @@ namespace Services.AssetProviderService
             handles.Add(handle);
 
             return await handle.Task;
+        }
+
+        public async Task<T> LoadAsComponent<T>(AssetReference assetReference) where T : Component
+        {
+            GameObject prefab = await Load<GameObject>(assetReference);
+            return prefab.GetComponent<T>();
+        }
+
+        public async Task<T> LoadAsComponent<T>(string key) where T : Component
+        {
+            GameObject prefab = await Load<GameObject>(key);
+            return prefab.GetComponent<T>();
         }
 
         public void Release()

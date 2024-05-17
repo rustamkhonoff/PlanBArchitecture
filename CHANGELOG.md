@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.6]
+### Mew
+- Added [Task<T> LoadAsComponent<T>(AssetReference or string)] to IAssetProvider
+  - Loads any AssetReference as GameObject and returns T Component
+
 ## [1.4.5]
 ### Mew
 - Added [GameObject InstantiatePrefab(GameObject, Transform)] to IDependencyInjectionService

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.5]
+### Mew
+- Added [GameObject InstantiatePrefab(GameObject, Transform)] to IDependencyInjectionService
+
 ## [1.4.4]
 ### Changes
 - Removed TMPRuntimeLocalizedText from LocalizationService

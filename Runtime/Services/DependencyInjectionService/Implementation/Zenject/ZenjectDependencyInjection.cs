@@ -18,7 +18,7 @@ namespace DependencyInjectionService.Implementation.Zenject
             m_logsEnabled = logsEnabled;
         }
 
-        public void Initialize()
+        void IInitializable.Initialize()
         {
             TryUpdateDiContainer();
             SceneManager.activeSceneChanged += HandleSceneChange;
@@ -39,7 +39,7 @@ namespace DependencyInjectionService.Implementation.Zenject
                 Update(sceneContext.Container);
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             if (m_logsEnabled)
                 Debug.Log("ZenjectDependencyInjection disposed");
@@ -48,40 +48,23 @@ namespace DependencyInjectionService.Implementation.Zenject
 
         #region Implementation
 
-        public T Resolve<T>()
-        {
-            return m_diContainer.Resolve<T>();
-        }
+        T IDependencyInjectionService.Resolve<T>() => m_diContainer.Resolve<T>();
 
-        public void Inject(object o)
-        {
-            m_diContainer.Inject(o);
-        }
+        void IDependencyInjectionService.Inject(object o) => m_diContainer.Inject(o);
 
-        public T Create<T>()
-        {
-            return m_diContainer.Instantiate<T>();
-        }
+        T IDependencyInjectionService.Create<T>() => m_diContainer.Instantiate<T>();
 
-        public object Create(Type type)
-        {
-            return m_diContainer.Instantiate(type);
-        }
+        object IDependencyInjectionService.Create(Type type) => m_diContainer.Instantiate(type);
 
-        public GameObject InstantiatePrefab(GameObject prefab)
-        {
-            return m_diContainer.InstantiatePrefab(prefab);
-        }
+        GameObject IDependencyInjectionService.InstantiatePrefab(GameObject prefab) => m_diContainer.InstantiatePrefab(prefab);
 
-        public T InstantiatePrefabForComponent<T>(T prefab) where T : Object
-        {
-            return m_diContainer.InstantiatePrefabForComponent<T>(prefab);
-        }
+        GameObject IDependencyInjectionService.InstantiatePrefab(GameObject prefab, Transform parent) =>
+            m_diContainer.InstantiatePrefab(prefab, parent);
 
-        public T InstantiatePrefabForComponent<T>(T prefab, Transform parent) where T : Object
-        {
-            return m_diContainer.InstantiatePrefabForComponent<T>(prefab, parent);
-        }
+        T IDependencyInjectionService.InstantiatePrefabForComponent<T>(T prefab) => m_diContainer.InstantiatePrefabForComponent<T>(prefab);
+
+        T IDependencyInjectionService.InstantiatePrefabForComponent<T>(T prefab, Transform parent) =>
+            m_diContainer.InstantiatePrefabForComponent<T>(prefab, parent);
 
         public void Update(object diContainer)
         {

@@ -85,17 +85,17 @@ namespace Extensions
         }
 
         public static Coroutine AnimateTextReveal(this TMP_Text tmp, string text, float perCharDelay = 0.01f,
-            Action endAction = null)
+            Action endAction = null, bool unscaled = false)
         {
-            return tmp.StartCoroutine(IEAnimatedTextReveal(tmp, text, perCharDelay, endAction));
+            return tmp.StartCoroutine(IEAnimatedTextReveal(tmp, text, perCharDelay, endAction, unscaled));
         }
 
         public static IEnumerator IEAnimatedTextReveal(TMP_Text tmp, string text, float perCharDelay = 0.01f,
-            Action endAction = default)
+            Action endAction = default, bool unscaled = false)
         {
             bool richText = tmp.richText;
             tmp.richText = true;
-            WaitForSeconds wfs = new(perCharDelay);
+            dynamic wfs = unscaled ? new WaitForSecondsRealtime(perCharDelay) : new WaitForSeconds(perCharDelay);
             StringBuilder sb = new(text.Length);
 
             for (int index = 0; index < text.Length; index++)

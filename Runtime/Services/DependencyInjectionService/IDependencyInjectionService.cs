@@ -15,5 +15,7 @@ namespace DependencyInjectionService
         T InstantiatePrefabForComponent<T>(T prefab) where T : Object;
         T InstantiatePrefabForComponent<T>(T prefab, Transform parent) where T : Object;
         void Update(object container);
+        void RegisterInstantiateHandler<T>(Action<T> onInstantiated);
+        void UnRegisterInstantiateHandler<T>(Action<T> onInstantiated);
     }
 }

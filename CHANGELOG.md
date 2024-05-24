@@ -1,12 +1,16 @@
 # Changelog
 
+## [1.4.7]
+### New
+- Added [RegisterInstantiateHandler/UnRegisterInstantiateHandler] callback when object of Type is Instantiated to [IDependencyInjectionService]
+
 ## [1.4.6]
-### Mew
+### New
 - Added [Task<T> LoadAsComponent<T>(AssetReference or string)] to IAssetProvider
   - Loads any AssetReference as GameObject and returns T Component
 
 ## [1.4.5]
-### Mew
+### New
 - Added [GameObject InstantiatePrefab(GameObject, Transform)] to IDependencyInjectionService
 
 ## [1.4.4]

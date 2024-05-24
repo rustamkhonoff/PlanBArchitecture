@@ -79,7 +79,7 @@ namespace DependencyInjectionService.Implementation.Zenject
 
         object IDependencyInjectionService.Create(Type type)
         {
-            return NotifyInstantiate(m_diContainer.Instantiate(type));
+            return NotifyInstantiateObj(m_diContainer.Instantiate(type));
         }
 
         GameObject IDependencyInjectionService.InstantiatePrefab(GameObject prefab)
@@ -125,6 +125,11 @@ namespace DependencyInjectionService.Implementation.Zenject
             }
         }
 
+        public void RegisterAnyInstantiateHandler(Action<object> onInstantiated)
+        {
+            RegisterInstantiateHandler(onInstantiated);
+        }
+
         public void UnRegisterInstantiateHandler<T>(Action<T> onInstantiated)
         {
             Type type = typeof(T);
@@ -135,16 +140,22 @@ namespace DependencyInjectionService.Implementation.Zenject
             }
         }
 
+        public void UnRegisterAnyInstantiateHandler(Action<object> onInstantiated)
+        {
+            UnRegisterInstantiateHandler(onInstantiated);
+        }
+
         #endregion
 
         private T NotifyInstantiate<T>(T instance)
         {
-            GetInstantiateWrapper<T>()?.Handle(instance);
-            return instance;
+            return (T)NotifyInstantiateObj(instance);
         }
 
-        private object NotifyInstantiate(object instance)
+        private object NotifyInstantiateObj(object instance)
         {
+            if (instance.GetType() != typeof(object))
+                GetInstantiateWrapper(typeof(object))?.Handle(instance);
             GetInstantiateWrapper(instance.GetType())?.Handle(instance);
             return instance;
         }
@@ -152,11 +163,6 @@ namespace DependencyInjectionService.Implementation.Zenject
         private IInstantiateActionWrapper GetInstantiateWrapper(Type type)
         {
             return m_instantiateActionWrappers.TryGetValue(type, out IInstantiateActionWrapper wrapper) ? wrapper : null;
-        }
-
-        private IInstantiateActionWrapper GetInstantiateWrapper<T>()
-        {
-            return m_instantiateActionWrappers.TryGetValue(typeof(T), out IInstantiateActionWrapper wrapper) ? wrapper : null;
         }
     }
 }

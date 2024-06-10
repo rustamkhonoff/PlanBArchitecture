@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DependencyInjectionService;
-using Extensions;
+using PlanB.Extensions;
 using UnityEngine;
 
-namespace FSM
+namespace Patterns.FSM
 {
     public class StateChangeConditionMap : IStateChangeConditionMap
     {

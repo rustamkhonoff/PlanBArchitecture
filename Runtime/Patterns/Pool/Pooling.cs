@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Pool
+namespace Patterns.Pool
 {
     public abstract class PoolBase
     {

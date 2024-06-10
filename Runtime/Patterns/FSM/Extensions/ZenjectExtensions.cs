@@ -1,9 +1,9 @@
 #if ZENJECT
 using System;
-using FSM.Implementations;
+using Patterns.FSM.Implementations;
 using Zenject;
 
-namespace FSM.Extensions
+namespace Patterns.FSM.Extensions
 {
     public static class ZenjectExtensions
     {

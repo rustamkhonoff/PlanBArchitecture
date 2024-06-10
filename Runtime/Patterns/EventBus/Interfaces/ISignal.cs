@@ -1,4 +1,4 @@
-namespace EventBus.Interfaces
+namespace Patterns.EventBus.Interfaces
 {
     public interface ISignal
     {

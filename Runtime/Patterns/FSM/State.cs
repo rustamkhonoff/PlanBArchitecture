@@ -1,4 +1,4 @@
-﻿namespace FSM
+﻿namespace Patterns.FSM
 {
     public abstract class State : StateBase
     {

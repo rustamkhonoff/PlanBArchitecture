@@ -1,6 +1,6 @@
 using System;
 
-namespace Handler
+namespace Patterns.Handler
 {
     public interface IHandler<T>
     {

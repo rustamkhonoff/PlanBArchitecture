@@ -3,7 +3,7 @@ using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Services.Maid
+namespace Maid
 {
     public static class Maid
     {
@@ -23,7 +23,7 @@ namespace Services.Maid
         }
 
         [Conditional(ConditionString)]
-        public static void LogSuccess(string category, object message)
+        public static void LogSuccess(object message, string category)
         {
             Debug.Log(FormatMessageWithCategory(SuccessColor, category, message));
         }
@@ -41,7 +41,7 @@ namespace Services.Maid
         }
 
         #endregion
-        
+
         #region Log
 
         [Conditional(ConditionString)]
@@ -51,7 +51,7 @@ namespace Services.Maid
         }
 
         [Conditional(ConditionString)]
-        public static void Log(string category, object message)
+        public static void Log(object message, string category)
         {
             Debug.Log(FormatMessageWithCategory(InfoColor, category, message));
         }
@@ -79,7 +79,7 @@ namespace Services.Maid
         }
 
         [Conditional(ConditionString)]
-        public static void LogWarning(string category, object message)
+        public static void LogWarning(object message, string category)
         {
             Debug.LogWarning(FormatMessageWithCategory(WarningColor, category, message));
         }
@@ -107,7 +107,7 @@ namespace Services.Maid
         }
 
         [Conditional(ConditionString)]
-        public static void LogError(string category, object message)
+        public static void LogError(object message, string category)
         {
             Debug.LogError(FormatMessageWithCategory(ErrorColor, category, message));
         }
@@ -135,7 +135,7 @@ namespace Services.Maid
         }
 
         [Conditional(ConditionString)]
-        public static void LogException(string category, Exception exception)
+        public static void LogException(Exception exception, string category)
         {
             Debug.LogError(FormatMessageWithCategory(ErrorColor, category, exception.Message));
         }

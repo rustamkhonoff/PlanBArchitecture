@@ -1,7 +1,7 @@
 using System;
 using DependencyInjectionService;
 
-namespace FSM.Implementations
+namespace Patterns.FSM.Implementations
 {
     internal class DiStateFactory : IStateFactory
     {

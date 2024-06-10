@@ -1,6 +1,6 @@
 using System;
 
-namespace FSM
+namespace Patterns.FSM
 {
     public interface IStateFactory
     {

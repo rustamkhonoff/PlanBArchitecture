@@ -1,6 +1,6 @@
 using System;
 
-namespace Extensions
+namespace PlanB.Extensions
 {
     public static class TypeExtensions
     {

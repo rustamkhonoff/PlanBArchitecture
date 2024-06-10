@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Handler
+namespace Patterns.Handler
 {
     public static class HandlerUtils
     {

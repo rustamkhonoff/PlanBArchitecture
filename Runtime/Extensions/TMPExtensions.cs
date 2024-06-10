@@ -6,7 +6,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 
-namespace Extensions
+namespace PlanB.Extensions
 {
     public static class TMPExtensions
     {

@@ -1,4 +1,4 @@
-#region ZENJECT
+#if ZENJECT
 
 using SaveService.Implementations;
 using Zenject;
@@ -18,4 +18,4 @@ namespace SaveService.Extensions.Zenject
     }
 }
 
-#endregion
+#endif

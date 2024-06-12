@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Services.UIParticleEffectsService
+namespace UIParticleEffectsService
 {
     public class UIParticleTextureData
     {

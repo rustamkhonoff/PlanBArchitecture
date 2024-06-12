@@ -1,4 +1,4 @@
-namespace Services.UIParticleEffectsService.Builder
+namespace UIParticleEffectsService.Builder
 {
     public enum ForceAmountType
     {

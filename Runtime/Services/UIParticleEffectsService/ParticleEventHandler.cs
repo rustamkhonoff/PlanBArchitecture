@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Services.UIParticleEffectsService
+namespace UIParticleEffectsService
 {
     internal class ParticleEventHandler : MonoBehaviour
     {

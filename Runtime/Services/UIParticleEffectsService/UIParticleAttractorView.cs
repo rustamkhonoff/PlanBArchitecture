@@ -1,14 +1,15 @@
 #if COFFEE_PARTICLES
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-
 using Coffee.UIExtensions;
+using UIParticleEffectsService.Builder;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Services.UIParticleEffectsService
+namespace UIParticleEffectsService
 {
   
 

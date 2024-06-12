@@ -1,4 +1,4 @@
-namespace Services.UIParticleEffectsService
+namespace UIParticleEffectsService.Builder
 {
     public enum ParticleAttractEmitType
     {

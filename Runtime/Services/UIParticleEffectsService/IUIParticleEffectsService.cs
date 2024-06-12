@@ -1,6 +1,6 @@
-using Services.UIParticleEffectsService.Builder;
+using UIParticleEffectsService.Builder;
 
-namespace Services.UIParticleEffectsService
+namespace UIParticleEffectsService
 {
     public interface IUIParticleEffectsService
     {

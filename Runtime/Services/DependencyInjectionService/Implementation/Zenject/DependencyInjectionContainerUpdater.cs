@@ -1,7 +1,7 @@
 ﻿#if ZENJECT
 using Zenject;
 
-namespace DependencyInjectionService.Implementation.Zenject
+namespace DependencyInjectionService.Zenject
 {
     public sealed class DependencyInjectionContainerUpdater : MonoInstaller, IInitializable
     {

@@ -14,7 +14,7 @@
     "versionDefines": [
         {
             "name": "com.mathijsbakker.extenject",
-            "expression": "",
+            "expression": "0.0.0",
             "define": "ZENJECT"
         }
     ],

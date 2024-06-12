@@ -12,6 +12,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.mathijsbakker.extenject",
+            "expression": "0",
+            "define": "ZENJECT"
+        }
+    ],
     "noEngineReferences": false
 }

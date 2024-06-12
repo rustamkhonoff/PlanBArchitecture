@@ -1,12 +1,12 @@
 #if COFFEE_PARTICLES
 using System.Runtime.CompilerServices;
-using Services.UIParticleEffectsService.Builder;
+using UIParticleEffectsService.Builder;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 [assembly: InternalsVisibleTo("UIParticleEffectService.Zenject")]
 
-namespace Services.UIParticleEffectsService.Implementation
+namespace UIParticleEffectsService.Implementation
 {
     internal class UIParticleEffectsService : IUIParticleEffectsService
     {

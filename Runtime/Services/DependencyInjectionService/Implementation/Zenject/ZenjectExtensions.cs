@@ -1,7 +1,7 @@
 #if ZENJECT
 using Zenject;
 
-namespace DependencyInjectionService.Implementation.Zenject
+namespace DependencyInjectionService.Zenject
 {
     public static class ZenjectExtensions
     {
@@ -14,4 +14,5 @@ namespace DependencyInjectionService.Implementation.Zenject
         }
     }
 }
+
 #endif

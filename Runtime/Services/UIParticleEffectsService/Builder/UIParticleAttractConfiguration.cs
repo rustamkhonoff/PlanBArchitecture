@@ -1,14 +1,11 @@
+#if COFFEE_PARTICLES
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-#if COFFEE_PARTICLES
 using Coffee.UIExtensions;
-#endif
-
 using UnityEngine;
 
-namespace Services.UIParticleEffectsService.Builder
+namespace UIParticleEffectsService.Builder
 {
     [Serializable]
     public class UIParticleAttractConfiguration
@@ -20,10 +17,8 @@ namespace Services.UIParticleEffectsService.Builder
         public Action AttractAction;
         public ParticleAttractEmitType EmitType = ParticleAttractEmitType.Delayed;
         public Vector3 StartPosition = new(Screen.width / 2f, Screen.height / 2f);
-#if COFFEE_PARTICLES
         public UIParticleAttractor.Movement Movement;
         public UIParticleAttractor.UpdateMode UpdateMode;
-#endif
         public Vector2Int TextureSheetSize;
         public List<Sprite> TextureSheetSprites;
         public ParticleSystemAnimationMode AnimationMode;
@@ -98,7 +93,7 @@ namespace Services.UIParticleEffectsService.Builder
             return this;
         }
 
-#if COFFEE_PARTICLES
+
         public UIParticleAttractConfiguration WithMovement(UIParticleAttractor.Movement movement)
         {
             Movement = movement;
@@ -110,7 +105,7 @@ namespace Services.UIParticleEffectsService.Builder
             UpdateMode = updateMode;
             return this;
         }
-#endif
+
 
         public UIParticleAttractConfiguration WithAttractAction(Action attractAction)
         {
@@ -131,3 +126,4 @@ namespace Services.UIParticleEffectsService.Builder
         }
     }
 }
+#endif

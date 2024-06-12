@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using Zenject;
 using Object = UnityEngine.Object;
 
-namespace DependencyInjectionService.Implementation.Zenject
+namespace DependencyInjectionService.Zenject
 {
     public interface IInstantiateActionWrapper
     {

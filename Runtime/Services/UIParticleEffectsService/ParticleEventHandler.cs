@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 using System;
 using UnityEngine;
 
@@ -18,3 +19,4 @@ namespace UIParticleEffectsService
         }
     }
 }
+#endif

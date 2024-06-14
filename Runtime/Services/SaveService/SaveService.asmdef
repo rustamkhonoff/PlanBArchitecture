@@ -2,7 +2,8 @@
     "name": "SaveService",
     "rootNamespace": "",
     "references": [
-        "GUID:a662f5cca40884f9c90c01ac2ce4ba33"
+        "GUID:a662f5cca40884f9c90c01ac2ce4ba33",
+        "PlanB.Patterns"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

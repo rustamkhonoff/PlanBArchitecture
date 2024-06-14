@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 namespace UIParticleEffectsService.Builder
 {
     public enum ParticleAttractEmitType
@@ -6,3 +7,4 @@ namespace UIParticleEffectsService.Builder
         AllInOnce = 1,
     }
 }
+#endif

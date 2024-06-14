@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,3 +14,4 @@ namespace UIParticleEffectsService
         public Material Material;
     }
 }
+#endif

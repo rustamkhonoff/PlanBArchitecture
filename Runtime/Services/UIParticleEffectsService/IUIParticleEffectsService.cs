@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 using UIParticleEffectsService.Builder;
 
 namespace UIParticleEffectsService
@@ -7,3 +8,4 @@ namespace UIParticleEffectsService
         void Attract(UIParticleAttractConfiguration configuration);
     }
 }
+#endif

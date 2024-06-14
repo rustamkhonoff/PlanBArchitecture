@@ -4,7 +4,9 @@
     "references": [
         "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
         "GUID:79dcdfb69b1bf4482a7f1952e749f51b",
-        "GUID:80161f19dd24946c4b26c1333880e612"
+        "GUID:80161f19dd24946c4b26c1333880e612",
+        "DependencyInjectionService",
+        "PlanB.Extensions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

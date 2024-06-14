@@ -1,3 +1,4 @@
+#if COFFEE_PARTICLES
 namespace UIParticleEffectsService.Builder
 {
     public enum ForceAmountType
@@ -7,3 +8,4 @@ namespace UIParticleEffectsService.Builder
         Big = 2
     }
 }
+#endif

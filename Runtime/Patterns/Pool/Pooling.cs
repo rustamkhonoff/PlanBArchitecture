@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Patterns.Pool
 {
     public abstract class PoolBase
     {
         public abstract object Get();
+        public abstract void ClearPool();
     }
 
     public sealed class PoolDictionary
@@ -42,7 +44,8 @@ namespace Patterns.Pool
             }
         }
 
-        public void AddPool<T>(Func<T> createFunc, int warmupAmount = 0, Action<T> onGet = null, Func<T, bool> validation = null)
+        public void AddPool<T>(Func<T> createFunc, int warmupAmount = 0, Action<T> onGet = null,
+            Func<T, bool> validation = null)
         {
             Type type = typeof(T);
             if (type.IsSubclassOf(typeof(Component)))
@@ -52,11 +55,13 @@ namespace Patterns.Pool
             }
             else if (type == typeof(GameObject))
             {
-                AddPool(type, Activator.CreateInstance(typeof(GameObjectPool), createFunc, warmupAmount, onGet, validation));
+                AddPool(type,
+                    Activator.CreateInstance(typeof(GameObjectPool), createFunc, warmupAmount, onGet, validation));
             }
             else if (type == typeof(Transform))
             {
-                AddPool(type, Activator.CreateInstance(typeof(TransformPool), createFunc, warmupAmount, onGet, validation));
+                AddPool(type,
+                    Activator.CreateInstance(typeof(TransformPool), createFunc, warmupAmount, onGet, validation));
             }
             else
             {
@@ -71,10 +76,11 @@ namespace Patterns.Pool
         private readonly Func<T> m_createFunc;
         private readonly Action<T> m_onGet;
         private readonly Func<T, bool> m_validation;
-        private readonly List<T> m_cache;
+        protected readonly List<T> m_cache;
         private readonly int m_warmupAmount;
 
-        public PoolWrapper(Func<T> createFunc, int warmupAmount = 0, Action<T> onGet = null, Func<T, bool> validation = null)
+        public PoolWrapper(Func<T> createFunc, int warmupAmount = 0, Action<T> onGet = null,
+            Func<T, bool> validation = null)
         {
             m_warmupAmount = warmupAmount;
             m_createFunc = createFunc;
@@ -149,6 +155,13 @@ namespace Patterns.Pool
             return (Transform)base.Get();
         }
 
+        public override void ClearPool()
+        {
+            for (int i = m_cache.Count - 1; i >= 0; i--)
+                Object.Destroy(m_cache[i].gameObject);
+            m_cache.Clear();
+        }
+
         protected override void EnableInstance(Transform instance)
         {
             instance.gameObject.SetActive(true);
@@ -175,6 +188,13 @@ namespace Patterns.Pool
         public new GameObject Get()
         {
             return (GameObject)base.Get();
+        }
+
+        public override void ClearPool()
+        {
+            for (int i = m_cache.Count - 1; i >= 0; i--)
+                Object.Destroy(m_cache[i].gameObject);
+            m_cache.Clear();
         }
 
         protected override void DisableInstance(GameObject instance)
@@ -214,6 +234,13 @@ namespace Patterns.Pool
         protected override bool DefaultValidation(T instance)
         {
             return instance.gameObject.activeSelf == false;
+        }
+
+        public override void ClearPool()
+        {
+            for (int i = m_cache.Count - 1; i >= 0; i--)
+                Object.Destroy(m_cache[i].gameObject);
+            m_cache.Clear();
         }
     }
 }
